@@ -1,0 +1,107 @@
+const SubSubCategory = require('../models/ProductSubSubCat');
+
+// Create a new sub-sub-category
+exports.addSubSubCategory = async (req, res, next) => {
+  try {
+    const body = {
+      name: req.body.name, 
+      Category: req.body.Category, 
+      SubCategory: req.body.SubCategory, 
+    };
+
+    const newSubSubCategory = await SubSubCategory.create(body);
+
+    res.send({
+      success: true,
+      data: newSubSubCategory,
+      msg: "SubSubCategory added",
+    });
+  } catch (error) {
+    return res.send({ error: error.message });
+  }
+};
+
+// Get all sub-sub-categories
+exports.getAllSubSubCategories = async (req, res) => {
+  try {
+    const subSubCategories = await SubSubCategory.find({ isDeleted: false });
+    return res.send(subSubCategories);
+  } catch (err) {
+    return res.send({ error: 'Server error' });
+  }
+};
+
+// Get a single sub-sub-category by ID
+exports.getSubSubCategoryById = async (req, res) => {
+  try {
+    const subSubCategoryId = req.params.id;
+    const subSubCategory = await SubSubCategory.findById(subSubCategoryId);
+
+    if (!subSubCategory) {
+      return res.send({ error: 'SubSubCategory not found' });
+    } else {
+      res.send({ success: true, subSubCategory });
+    }
+  } catch (error) {
+    return res.send({ error: error.message });
+  }
+};
+
+// Update a sub-sub-category by ID
+exports.updateSubSubCategoryById = async (req, res, next) => {
+  try {
+    const subSubCategoryId = req.params.id;
+    const subSubCategoryToUpdate = await SubSubCategory.findById(subSubCategoryId);
+
+    if (!subSubCategoryToUpdate) {
+      return res.send({ error: 'SubSubCategory not found' });
+    }
+
+    const updateData = {
+      name: req.body.name,
+      Category: req.body.Category, 
+      SubCategory: req.body.SubCategory,
+    };
+
+    await SubSubCategory.findByIdAndUpdate(subSubCategoryId, updateData);
+    const updatedSubSubCategory = await SubSubCategory.findById(subSubCategoryId);
+
+    res.send({
+      success: true,
+      msg: 'SubSubCategory updated successfully',
+      data: updatedSubSubCategory,
+    });
+  } catch (error) {
+    return res.send({ error: error.message });
+  }
+};
+
+// Delete a sub-sub-category by ID
+exports.deleteSubSubCategoryById = async (req, res) => {
+  try {
+    const subSubCategoryId = req.params.id;
+    const subSubCategory = await SubSubCategory.findByIdAndUpdate(
+      subSubCategoryId,
+      { isDeleted: true },
+      { new: true }
+    );
+
+    if (!subSubCategory) {
+      return res.send({ success: false, error: 'SubSubCategory not found' });
+    }
+
+    return res.send({ success: true, message: 'SubSubCategory deleted successfully' });
+  } catch (error) {
+    return res.send({ success: false, error: 'Server error' });
+  }
+};
+
+// Get deleted SubSubCategories
+exports.getAllDeletedSubSubCategories = async (req, res) => {
+  try {
+    const subSubCategories = await SubSubCategory.find({ isDeleted: true });
+    return res.send(subSubCategories);
+  } catch (err) {
+    return res.send({ error: 'Server error' });
+  }
+};

@@ -1,66 +1,97 @@
-const express = require("express");
-const Category = require("../models/ProductCat");
+const Category = require('../models/ProductCat'); // Import the Category model
 
 // Create a new category
-const createCategory = async (req, res) => {
-  const { name, subCategories } = req.body;
-  console.log(req.body);
+exports.createCategory = async (req, res) => {
   try {
-    // Check if the category already exists
-    let category = await Category.findOne({ name });
-
-    if (category) {
-      // Category exists, add the new subCategories
-      category.subCategories.push(...subCategories);
-      await category.save();
-      return res.send({ success: true, msg: "Subcategories added to existing category", category });
-    } else {
-      // Create a new category document with subCategories
-      const newCategory = await Category.create({ name, subCategories });
-      return res.send({ success: true, msg: "Successfully Added", category: newCategory });
-    }
-  } catch (error) {
-    return res.send({
-      success: false,
-      msg: "Error Occurred",
-      error: error.message,
-    });
+    const category = new Category(req.body);
+    await category.save();
+     return res.send({success : true , msg:"Category Added Succesfully" ,category});
+  } catch (err) {
+    return res.send({ error: err.message });
   }
 };
-
 
 // Get all categories
-const getAllCategories = async (req, res) => {
+exports.getAllCategories = async (req, res) => {
   try {
-    const categories = await Category.find().exec();
-    res.send({ success: true, categories });
-  } catch (error) {
-    res.send({ success: false, error: error.message });
+    const categories = await Category.find({ isDeleted: false });
+    return res.send(categories);
+  } catch (err) {
+    return res.send({ error: 'Server error' });
   }
 };
 
-// Get Specific subCategories
-const getSpecificSubCategories = async (req, res) => {
-  const { categoryId } = req.params; // Use req.params.categoryId instead of req.body.categoryId
-  console.log(req.params);
-
+// Get a single category by ID
+exports.getCategoryById = async (req, res) => {
   try {
-    const category = await Category.findById(categoryId).exec();
+    const categoryId = req.params.id;
+    console.log(categoryId);
+    const category = await Category.findById(categoryId);
 
     if (!category) {
-      return res.send({ success: false, error: "Category not found" });
+      return res.send({ error: 'Category not found' });
+    } else {
+      res.send({ success: true, category });
     }
-
-    // Extract and send the subCategories from the found category
-    const subCategories = category.subCategories;
-    res.send({ success: true, subCategories });
   } catch (error) {
-    res.send({ success: false, error: error.message });
+    return res.send({ error: error.message });
   }
 };
 
-module.exports = {
-  createCategory,
-  getAllCategories,
-  getSpecificSubCategories,
+// Update a category by ID
+exports.updateCategoryById = async (req, res, next) => {
+  try {
+    const categoryId = req.params.id;
+    const categoryToUpdate = await Category.findById(categoryId);
+
+    if (!categoryToUpdate) {
+        return res.send({ error: "Category not found" });
+    }
+
+    const updateData = {
+      name: req.body.name, // Replace 'name' with the field you want to update
+      // Add more fields as needed
+    };
+
+    await Category.findByIdAndUpdate(categoryId, updateData);
+    const updatedCategory = await Category.findById(categoryId);
+
+    res.send({
+      success: true,
+      msg: "Category updated successfully",
+      data: updatedCategory,
+    });
+  } catch (error) {
+    return res.send({ error: error.message });
+  }
+};
+
+// Delete a category by ID
+exports.deleteCategoryById = async (req, res) => {
+  try {
+    const categoryId = req.params.id;
+    const category = await Category.findByIdAndUpdate(
+      categoryId,
+      { isDeleted: true },
+      { new: true }
+    );
+
+    if (!category) {
+      return res.send({ success: false, error: 'Category not found' });
+    }
+
+    return res.send({ success: true, message: 'Category deleted successfully' });
+  } catch (error) {
+    return res.send({ success: false, error: 'Server error' });
+  }
+};
+
+// GetDeleted Categories
+exports.getAllDeletedCategories = async (req, res) => {
+  try {
+    const categories = await Category.find({ isDeleted: true });
+    return res.send(categories);
+  } catch (err) {
+    return res.send({ error: 'Server error' });
+  }
 };
