@@ -3,39 +3,72 @@ const Product = require("../models/Products");
 const Category = require("../models/ProductCat");
 
 // Create Product
-const createProduct =  async (req, res) => {
-  try {
-    const { name, description, category ,subCategory,original ,discounted, stock, sku , status ,isProductPopular, isProductNew } = req.body;
-    const mainImage = req.file.path;
-    console.log(req.body);
-    // console.log(req.file);
 
-    const product = await Product.create({
-      name:name,
-      description:description,
-      category:category,
-      subCategory:subCategory,
-      prices:{original:original,discounted:discounted},
-      mainImageURL: mainImage,
-      // imageGallery:imageGallery,
-      stock:stock,
-      sku:sku,
-      status : status,
-      isProductPopular : isProductPopular , 
-      isProductNew : isProductNew,
+exports.addProduct = async (req, res, next) => {
+  const {
+    name,
+    description,
+    category,
+    subCategory,
+    subSubCategory,
+    original,
+    discounted,
+    stock,
+    sku,
+    status,
+    isProductPopular,
+    isProductNew,
+  } = req.body;
+
+  // Extract the main image and image gallery files
+  const mainImageFile = req.file;
+  const imageGalleryFiles = req.files; // Assuming you use multipart form data for multiple files
+
+  // Check if main image and image gallery files exist
+  if (!mainImageFile || !imageGalleryFiles || imageGalleryFiles.length === 0) {
+    return res.status(400).send({
+      success: false,
+      error: "Main image and image gallery files are required.",
     });
-    
-    // Fetch the category name using the category ID
-    const categoryObj = await Category.findById(category);
-
-    // Get the category name from the fetched category object
-    const categoryName = categoryObj.name;
-
-    return res.send({success:true,msg:'product added successfully' , product , categoryName});
-  } catch (error) {
-    return res.send({ error:error.message });
   }
-}
+
+  // Prepare main image and image gallery URLs
+  const mainImageURL = mainImageFile.filename; // Assuming you're saving the main image
+  const imageGallery = imageGalleryFiles.map((file) => file.filename);
+
+  const productData = {
+    name : name,
+    description : description,
+    category : category,
+    subCategory : subCategory,
+    subSubCategory : subSubCategory,
+    prices : {original : original , discounted : discounted},
+    mainImageURL : mainImageURL,
+    imageGallery : imageGallery,
+    stock : stock,
+    sku : sku,
+    status : status,
+    isProductPopular : isProductPopular,
+    isProductNew : isProductNew , 
+  };
+
+  try {
+    const newProduct = await Product.create(productData);
+    res.send({
+      success: true,
+      data: newProduct,
+      message: "Product added successfully",
+    });
+  } catch (error) {
+    if (error.code === 11000) {
+      // Duplicate key error (e.g., duplicate SKU)
+      res.send({ success: false, error: "Duplicate SKU" });
+    } else {
+      res.send({ success: false, error: "Internal Server Error" });
+    }
+  }
+};
+
 
 // Get All Products
 const getAllProducts = async (req, res) => {  
@@ -114,7 +147,6 @@ const deleteProduct = async (req, res) => {
   };
 
 module.exports = {
-  createProduct,
   getAllProducts,
   getSpecificProduct,
   updateProduct,
