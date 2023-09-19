@@ -19,9 +19,12 @@ const productSubCatRoutes = require("./routes/ProductSubCatRoutes");
 const productSubSubCatRoutes = require("./routes/ProductSubSubCatRoutes");
 const Products = require("./routes/ProductRoute");
 const customerRoutes = require("./routes/customerRoute");
+const orderRoutes = require("./routes/OrderRoutes");
 const contentRoutes = require("./routes/contentRoutes");
 const galleryRoutes = require("./routes/GalleryCatMasterRoutes");
 const galleryDetailsRoutes = require("./routes/GalleryMasterRoutes");
+
+
 // const menuRoutes = require("./routes/menuRoutes");
 
 
@@ -59,6 +62,7 @@ app.use("/customer" , customerRoutes);
 app.use("/content" , contentRoutes);
 app.use("/gallery" , galleryRoutes);
 app.use("/gallerydetails" , galleryDetailsRoutes);
+app.use("/orders" , orderRoutes);
 // app.use("/api" , menuRoutes);
 // app.use("/general" ,generelRoutes);
 // app.use("/client" ,clientRoutes);

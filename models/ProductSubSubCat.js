@@ -3,11 +3,11 @@ const mongoose = require("mongoose");
 // Define the sub-sub-category schema by extending the sub-category schema
 const subSubCategorySchema = new mongoose.Schema({
   Category: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "Category",
   },
   SubCategory: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "SubCategory",
   },
   name: {

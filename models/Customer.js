@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 const bcrypt = require("bcryptjs");
 
 const customerSchema = new mongoose.Schema({
-  username: { type: String, required: true},
+  username: { type: String, required: true },
   email: {
     type: String,
     required: [true, "Please add a email"],
@@ -24,7 +24,13 @@ const customerSchema = new mongoose.Schema({
   },
   orderHistory: [{ type: mongoose.Schema.Types.ObjectId, ref: "Order" }],
   wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
-  cartItems: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+  cartItems: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product",
+      quantity: { type: Number},
+    },
+  ],
   paymentMethods: [String],
   preferences: {
     language: String,
