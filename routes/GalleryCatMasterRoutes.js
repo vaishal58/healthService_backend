@@ -3,8 +3,6 @@ const router = express.Router();
 const cookieParser = require("cookie-parser");
 router.use(cookieParser());
 
-
-
 const multer = require("multer");
 const { getGallaryCategories, getAllIncDel, addNewGallaryCategory, getGallaryCatById, updateGallaryCat, deleteGallaeyCat } = require("../controllers/GalleryCatMasterController");
 

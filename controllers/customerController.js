@@ -1,4 +1,5 @@
 const Customer = require("../models/Customer");
+const Cart = require("../models/Cart");
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
@@ -65,6 +66,9 @@ const loginCustomer = async (req, res) => {
       // Generate Token
       const token = generateToken(customer._id);
 
+       // Fetch the customer's cart items
+       const cart = await Cart.findOne({ CustomerId: customer._id });
+
       // Send HTTP-only cookie
       res.cookie("token", token, {
         path: "/",
@@ -78,6 +82,7 @@ const loginCustomer = async (req, res) => {
         success: true,
         msg: "Successfully LoggedIn",
         token: token,
+        cart : cart,
       });
     } else {
       return res.send({ success: false, msg: "Invalid user data" });

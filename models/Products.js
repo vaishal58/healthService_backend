@@ -10,8 +10,7 @@ const productSchema = new mongoose.Schema({
     original: { type: Number },
     discounted: { type: Number },
   },
-  mainImageURL: { type: String }, // Store the main image URL here
-  imageGallery: [{type: String}], // Store an array of image URLs here
+  imageGallery: {type: Array}, // Store an array of image URLs here
   stock: { type: String }, // Store the stock quantity here
   sku: { type: String , unique : true},
   status: {

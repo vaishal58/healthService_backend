@@ -4,7 +4,7 @@ const Category = require("../models/ProductCat");
 
 // Create Product
 
-exports.addProduct = async (req, res, next) => {
+const addProduct = async (req, res, next) => {
   const {
     name,
     description,
@@ -21,11 +21,11 @@ exports.addProduct = async (req, res, next) => {
   } = req.body;
 
   // Extract the main image and image gallery files
-  const mainImageFile = req.file;
+  // const mainImageFile = req.file;
   const imageGalleryFiles = req.files; // Assuming you use multipart form data for multiple files
 
   // Check if main image and image gallery files exist
-  if (!mainImageFile || !imageGalleryFiles || imageGalleryFiles.length === 0) {
+  if (!imageGalleryFiles || imageGalleryFiles.length === 0) {
     return res.status(400).send({
       success: false,
       error: "Main image and image gallery files are required.",
@@ -33,7 +33,7 @@ exports.addProduct = async (req, res, next) => {
   }
 
   // Prepare main image and image gallery URLs
-  const mainImageURL = mainImageFile.filename; // Assuming you're saving the main image
+  // const mainImage = mainImageFile.filename; // Assuming you're saving the main image
   const imageGallery = imageGalleryFiles.map((file) => file.filename);
 
   const productData = {
@@ -43,7 +43,7 @@ exports.addProduct = async (req, res, next) => {
     subCategory : subCategory,
     subSubCategory : subSubCategory,
     prices : {original : original , discounted : discounted},
-    mainImageURL : mainImageURL,
+    // mainImage : mainImage,
     imageGallery : imageGallery,
     stock : stock,
     sku : sku,
@@ -56,7 +56,7 @@ exports.addProduct = async (req, res, next) => {
     const newProduct = await Product.create(productData);
     res.send({
       success: true,
-      data: newProduct,
+      newProduct,
       message: "Product added successfully",
     });
   } catch (error) {
@@ -82,7 +82,7 @@ const getAllProducts = async (req, res) => {
 
 // Get Specific Product
 const getSpecificProduct = async (req, res) => {
-  const productId = req.body.id;
+  const productId = req.params.id;
   try {
     const product = await Product.findById(productId);
     if (!product) {
@@ -97,44 +97,78 @@ const getSpecificProduct = async (req, res) => {
 // Update Product
 const updateProduct = async (req, res) => {
   try {
-    if (req.body.id) {
-      const { id, name, description, category, subCategory, original ,discounted, stock, sku, status , isProductPopular , isProductNew} = req.body;
-      const product = await Product.findById(id);
-  
-      if (!product) {
-        return res.send({ success: false, message: "Product not found." });
-      }
-  
-      // Assuming you have a mainImage property in your req.file
-      const mainImage = req.file ? req.file.path : product.mainImageURL;
+    const productId = req.params.id; // Get the product ID from the route parameter
 
-      await Product.findByIdAndUpdate(id, {
-        name: name,
-        description: description,
-        category: category,
-        subCategory: subCategory,
-        prices : {original : original, discounted : discounted},
-        stock : stock,
-        sku : sku,
-        mainImageURL : mainImage,
-        status : status,
-        isProductPopular : isProductPopular, 
-        isProductNew : isProductNew,
-      });
-      return res.send({
-        success: true,
-        msg: "Product updated",
+    // Check if a valid product ID is provided
+    if (!productId) {
+      return res.status(400).send({ success: false, message: "Product ID is required." });
+    }
+
+    // Find the product by ID
+    const product = await Product.findById(productId);
+
+    // Check if the product exists
+    if (!product) {
+      return res.status(404).send({ success: false, message: "Product not found." });
+    }
+
+    // Extract updated product information from the request body
+    const {
+      name,
+      description,
+      category,
+      subCategory,
+      subSubCategory,
+      original,
+      discounted,
+      imageGallery,
+      stock,
+      sku,
+      status,
+      isProductPopular,
+      isProductNew,
+    } = req.body;
+
+    
+    if (req.files && req.files.length > 0) {
+      // Handle multiple image files for the gallery
+      req.files.forEach((file) => {
+        imageGallery.push(file.path);
       });
     }
+
+    // Update the product with the new information, except for the mainImageURL
+    await Product.findByIdAndUpdate(productId, {
+      name,
+      description,
+      category,
+      subCategory,
+      subSubCategory,
+      prices: { original, discounted },
+      imageGallery, // Update the image gallery field
+      stock,
+      sku,
+      status,
+      isProductPopular,
+      isProductNew,
+    });
+
+    return res.send({
+      success: true,
+      message: "Product updated successfully.",
+    });
   } catch (error) {
     console.error('Update Error:', error);
-    res.send({ success: false ,  error: error });
+    res.send({ success: false, error: "Internal Server Error" });
   }
 };
 
+
+
+
 // Delete Product
 const deleteProduct = async (req, res) => {
-    const productId = req.body.id;
+    const productId = req.params.id;
     try {
       const deletedProduct = await Product.findByIdAndRemove(productId);
       if (!deletedProduct) {
@@ -151,4 +185,5 @@ module.exports = {
   getSpecificProduct,
   updateProduct,
   deleteProduct,
+  addProduct,
 };
