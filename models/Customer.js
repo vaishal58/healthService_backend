@@ -27,8 +27,7 @@ const customerSchema = new mongoose.Schema({
   cartItems: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Product",
-      quantity: { type: Number},
+      ref: "Cart",
     },
   ],
   paymentMethods: [String],
