@@ -6,13 +6,11 @@ const productSchema = new mongoose.Schema({
   category: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
   subCategory: { type: mongoose.Schema.Types.ObjectId, ref: "SubCategory" },
   subSubCategory: { type: mongoose.Schema.Types.ObjectId, ref: "SubSubCategory" },
-  prices: {
-    original: { type: Number },
-    discounted: { type: Number },
-  },
+  prices: { type: Number},
+  discounted: { type: Number },
   mainImageURL: { type: String }, // Store the main image URL here
   imageGallery: [{type: String}], // Store an array of image URLs here
-  stock: { type: String }, // Store the stock quantity here
+  stock: { type: Number,default:0 }, // Store the stock quantity here
   sku: { type: String , unique : true},
   status: {
     type: String,

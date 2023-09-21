@@ -13,7 +13,7 @@ const app = express();
 app.use(cookieParser());
 
 const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "1d" });
+  return jwt.sign({ id }, "everything", { expiresIn: "1d" });
 };
 
 //  Register User
@@ -44,33 +44,22 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
-// Login User
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-
-  // Validation
   if (!email || !password) {
     return res.send({ success: false, msg: "Please fill all required fields" });
   }
 
-  // Check user exist
   const user = await User.findOne({ email });
 
   if (!user) {
     return res.send({ success: false, msg: "User not found" });
   }
 
-  // User exist , check the password is correct
   const passwordIscorrect = await bcrypt.compare(password, user.password);
 
-  //   Generate Token
   const token = generateToken(user._id);
-
-  // Fetch user's permissions
   const roles = await Role.findOne({ role: user.roles[0] });
-  // console.log(permissions);
-
-  // Send HTTP-only cookie
   res.cookie("token", token, {
     path: "/",
     httpOnly: true,
@@ -80,7 +69,6 @@ const loginUser = asyncHandler(async (req, res) => {
   });
 
   if (user && passwordIscorrect) {
-    // const { _id, name, email, photo } = user;
     return res.send({
       success: true,
       msg: "Successfully LoggedIn",
@@ -162,7 +150,7 @@ const loginStatus = asyncHandler(async (req, res) => {
   }
 
   // Verify token
-  const verified = jwt.verify(token, process.env.JWT_SECRET);
+  const verified = jwt.verify(token, "everything");
   if (verified) {
     return res.send({ success: true });
   } else {
