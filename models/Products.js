@@ -11,7 +11,9 @@ const productSchema = new mongoose.Schema({
     discounted: { type: Number },
   },
   imageGallery: {type: Array}, // Store an array of image URLs here
-  stock: { type: String }, // Store the stock quantity here
+  stock: {
+    quantity:{type:String}
+   }, // Store the stock quantity here
   sku: { type: String , unique : true},
   status: {
     type: String,

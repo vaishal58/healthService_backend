@@ -40,6 +40,12 @@ const customerSchema = new mongoose.Schema({
     enum: ["active", "inactive"],
     default: "active",
   },
+  deleted: {
+    type: Boolean,
+    default: false,
+  },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
 });
 
 //Encrypt password before saving to DB

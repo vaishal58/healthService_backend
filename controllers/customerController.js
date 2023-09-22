@@ -33,7 +33,7 @@ const registerCustomer = async (req, res) => {
     });
     return res.send({
       success: true,
-      msg: "User added successfully",
+      msg: "Customer added successfully",
       customer,
     });
   } catch (error) {
@@ -66,8 +66,8 @@ const loginCustomer = async (req, res) => {
       // Generate Token
       const token = generateToken(customer._id);
 
-       // Fetch the customer's cart items
-       const cart = await Cart.findOne({ CustomerId: customer._id });
+      // Fetch the customer's cart items
+      const cart = await Cart.findOne({ CustomerId: customer._id });
 
       // Send HTTP-only cookie
       res.cookie("token", token, {
@@ -82,7 +82,7 @@ const loginCustomer = async (req, res) => {
         success: true,
         msg: "Successfully LoggedIn",
         token: token,
-        cart : cart,
+        cart: cart,
       });
     } else {
       return res.send({ success: false, msg: "Invalid user data" });
@@ -109,7 +109,7 @@ const logoutCustomer = async (req, res) => {
 
 // Get All Customers
 const getCustomers = async (req, res) => {
-  const customers = await Customer.find().exec();
+  const customers = await Customer.find({ deleted: false }).lean();
   if (customers) {
     res.send({ customers });
   } else {
@@ -123,13 +123,9 @@ const getLoggedInCustomer = async (req, res) => {
   const customer = await Customer.findById(customerId);
 
   if (customer) {
-    const { _id, name, email, password } = customer;
     return res.send({
       success: true,
-      _id,
-      name,
-      email,
-      password,
+      customer,
     });
   } else {
     return res.send({ success: false, msg: "User not found" });
@@ -139,16 +135,12 @@ const getLoggedInCustomer = async (req, res) => {
 // Get Specific Cutomer By Id
 const getSpecificCustomer = async (req, res) => {
   try {
-    let customerId = req.body.id;
+    let customerId = req.params.id;
     const customer = await Customer.findById(customerId);
     if (customer) {
-      const { _id, username, email, password } = customer;
       return res.send({
         success: true,
-        _id,
-        username,
-        email,
-        password,
+        customer,
       });
     } else {
       return res.send({ success: false, msg: "User not found" });
@@ -176,48 +168,77 @@ const loginStatus = async (req, res) => {
   }
 };
 
-// Update Customer 
-// const updateCustomer = 
+// Update Customer
+const updateCustomer = async (req, res) => {
+  try {
+    const CustomerId = req.body.id;
+    console.log(CustomerId)
+    const customer = await Customer.findById(CustomerId);
+    if (!customer) {
+      return res.send({ error: "Id not found" });
+    }
+    const updateData = {
+      username: req.body.username,
+      email: req.body.email,
+      address: req.body.address,
+      phone: req.body.phone,
+      orderHistory: req.body.orderHistory,
+      paymentMethods: req.body.paymentMethods,
+      status: req.body.status,
+      deleted: req.body.deleted,
+      updatedAt: Date.now(),
+    };
+
+    await Customer.findByIdAndUpdate(CustomerId, updateData);
+    const updatedRecord = await Customer.findById(CustomerId);
+    res.send({
+      success: true,
+      msg: "Customer updated successfully",
+      updatedRecord,
+    });
+  } catch (error) {
+    return res.send({ error: error.message });
+  }
+};
 
 // Update Password
 const updateCustomerPassword = async (req, res) => {
-  const customer = await Customer.findById(req.body.id);
-  const { oldPassword, newPassword, id } = req.body;
+  try {
+  const customerId = req.params.id;
+  const customer = await Customer.findById(customerId);
+  const { oldPassword, newPassword } = req.body;
+  console.log(req.body);
   if (!customer) {
-    return res.send({ success: false, msg: "User not found, Please signup" });
+    return res.send({ success: false, msg: "User not found , Please signup" });
   }
   // Validate
   if (!oldPassword || !newPassword) {
     return res.send({ success: false, msg: "Please add old and new password" });
   }
 
-  try {
-    // check if old password matches password in DB
-    const passwordMatches = await bcrypt.compare(
-      oldPassword,
-      customer.password
-    );
-    if (!passwordMatches) {
-      return res.send({ success: false, msg: "Old password is incorrect" });
-    }
-
-    if (oldPassword === newPassword) {
-      return res.send({
-        success: false,
-        msg: "New Password cannot be the same as the Old password",
-      });
-    } else {
-      const salt = await bcrypt.genSalt(10);
-      const secPass = await bcrypt.hash(newPassword, salt);
-      await Customer.findByIdAndUpdate(id, {
-        password: secPass,
-      });
-      return res.send({ success: true, msg: "Password changed successfully" });
-    }
-  } catch (err) {
-    return res.send({ success: false, msg: "Server error" });
+  // check if old password matches password in DB
+  const passwordMatches = await bcrypt.compare(oldPassword, customer.password);
+  if (!passwordMatches) {
+    return res.send({ success: false, msg: "Old password is incorrect" });
   }
-};
+
+  if (oldPassword === newPassword) {
+    return res.send({
+      success: false,
+      msg: "New Password cannot be same as Old password",
+    });
+  } else {
+    const secPass = await bcrypt.hash(newPassword, 10);
+    await Customer.findByIdAndUpdate(customerId, {
+      password: secPass,
+    });
+    return res.send({ success: true, msg: "Password changed successfully" });
+  }
+}catch(error){
+  return res.send({ error: error.message });
+}
+}
+
 
 // Forget Password
 const forgotCustomerPassword = async (req, res) => {
@@ -306,6 +327,29 @@ const resetCustomerPassword = async (req, res) => {
   });
 };
 
+// Delete Specific Customer 
+const DeleteCustomer = async (req, res, next) => {
+  try {
+    const customerId = req.body.id;
+    const record = await Customer.findByIdAndUpdate(
+      customerId,
+      {
+        deleted: true,
+        deletedAt: new Date(),
+      },
+      { new: true }
+    );
+
+    if (!record) {
+      return res.send({success : true , message: "record not found" });
+    }
+
+    return res.send({success : true, message: "Successfully Deleted"});
+  } catch (error) {
+    return res.send({ success : false , error: error.message });
+  }
+};
+
 module.exports = {
   registerCustomer,
   loginCustomer,
@@ -317,4 +361,6 @@ module.exports = {
   updateCustomerPassword,
   forgotCustomerPassword,
   resetCustomerPassword,
+  updateCustomer,
+  DeleteCustomer,
 };
