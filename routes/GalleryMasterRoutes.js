@@ -4,7 +4,7 @@ const cookieParser = require("cookie-parser");
 router.use(cookieParser());
 
 const multer = require("multer");
-const { getGallaryItems, getAllIncDel, addNewImageInGallary, getGallaryItemById, updateGallaryItem, deleteGalleryItem } = require("../controllers/galleryMasterController");
+const { getGallaryItems, getAllIncDel, addNewImageInGallary, getGallaryItemById, updateGallaryItem, deleteGalleryItem } = require("../controllers/GalleryMasterController");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
