@@ -50,6 +50,7 @@ app.use(morgan("common"));
 app.use(cors());
 app.use("/uploads", express.static("./uploads"));
 app.use("/gallery-images", express.static("./uploads/Gallery"));
+app.use("/products", express.static("./uploads/Products"));
 
 
 // Routes Middleware
