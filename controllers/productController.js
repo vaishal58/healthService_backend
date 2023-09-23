@@ -18,7 +18,12 @@ const addProduct = async (req, res, next) => {
     status,
     isProductPopular,
     isProductNew,
+    isActive
   } = req.body;
+
+  console.log(req.files)
+  console.log(req.body)
+
 
   // Extract the main image and image gallery files
   // const mainImageFile = req.file;
@@ -45,11 +50,12 @@ const addProduct = async (req, res, next) => {
     prices : {original : original , discounted : discounted},
     // mainImage : mainImage,
     imageGallery : imageGallery,
-    stock : stock,
+    stock : {quantity : stock},
     sku : sku,
     status : status,
     isProductPopular : isProductPopular,
     isProductNew : isProductNew , 
+    isActive:isActive
   };
 
   try {
@@ -60,6 +66,7 @@ const addProduct = async (req, res, next) => {
       message: "Product added successfully",
     });
   } catch (error) {
+    console.log(error)
     if (error.code === 11000) {
       // Duplicate key error (e.g., duplicate SKU)
       res.send({ success: false, error: "Duplicate SKU" });
@@ -127,6 +134,7 @@ const updateProduct = async (req, res) => {
       status,
       isProductPopular,
       isProductNew,
+      isActive
     } = req.body;
 
     
@@ -151,6 +159,7 @@ const updateProduct = async (req, res) => {
       status,
       isProductPopular,
       isProductNew,
+      isActive
     });
 
     return res.send({
