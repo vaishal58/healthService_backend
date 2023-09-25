@@ -24,6 +24,7 @@ const orderRoutes = require("./routes/OrderRoutes");
 const contentRoutes = require("./routes/contentRoutes");
 const galleryRoutes = require("./routes/GalleryCatMasterRoutes");
 const galleryDetailsRoutes = require("./routes/GalleryMasterRoutes");
+const StocksRoutes = require("./routes/StockRoutes");
 
 
 // const menuRoutes = require("./routes/menuRoutes");
@@ -65,6 +66,7 @@ app.use("/content" , contentRoutes);
 app.use("/gallery" , galleryRoutes);
 app.use("/gallerydetails" , galleryDetailsRoutes);
 app.use("/orders" , orderRoutes);
+app.use("/stocks" , StocksRoutes);
 // app.use("/api" , menuRoutes);
 // app.use("/general" ,generelRoutes);
 // app.use("/client" ,clientRoutes);

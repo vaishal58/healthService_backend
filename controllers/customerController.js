@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser");
 const Token = require("../models/tokenModel");
 const crypto = require("crypto");
 const sendEmail = require("../utils/sendEmail");
+const Product = require("../models/Products");
 
 const app = express();
 app.use(cookieParser());
@@ -172,7 +173,7 @@ const loginStatus = async (req, res) => {
 const updateCustomer = async (req, res) => {
   try {
     const CustomerId = req.body.id;
-    console.log(CustomerId)
+    console.log(CustomerId);
     const customer = await Customer.findById(CustomerId);
     if (!customer) {
       return res.send({ error: "Id not found" });
@@ -204,41 +205,49 @@ const updateCustomer = async (req, res) => {
 // Update Password
 const updateCustomerPassword = async (req, res) => {
   try {
-  const customerId = req.params.id;
-  const customer = await Customer.findById(customerId);
-  const { oldPassword, newPassword } = req.body;
-  console.log(req.body);
-  if (!customer) {
-    return res.send({ success: false, msg: "User not found , Please signup" });
-  }
-  // Validate
-  if (!oldPassword || !newPassword) {
-    return res.send({ success: false, msg: "Please add old and new password" });
-  }
+    const customerId = req.params.id;
+    const customer = await Customer.findById(customerId);
+    const { oldPassword, newPassword } = req.body;
+    console.log(req.body);
+    if (!customer) {
+      return res.send({
+        success: false,
+        msg: "User not found , Please signup",
+      });
+    }
+    // Validate
+    if (!oldPassword || !newPassword) {
+      return res.send({
+        success: false,
+        msg: "Please add old and new password",
+      });
+    }
 
-  // check if old password matches password in DB
-  const passwordMatches = await bcrypt.compare(oldPassword, customer.password);
-  if (!passwordMatches) {
-    return res.send({ success: false, msg: "Old password is incorrect" });
-  }
+    // check if old password matches password in DB
+    const passwordMatches = await bcrypt.compare(
+      oldPassword,
+      customer.password
+    );
+    if (!passwordMatches) {
+      return res.send({ success: false, msg: "Old password is incorrect" });
+    }
 
-  if (oldPassword === newPassword) {
-    return res.send({
-      success: false,
-      msg: "New Password cannot be same as Old password",
-    });
-  } else {
-    const secPass = await bcrypt.hash(newPassword, 10);
-    await Customer.findByIdAndUpdate(customerId, {
-      password: secPass,
-    });
-    return res.send({ success: true, msg: "Password changed successfully" });
+    if (oldPassword === newPassword) {
+      return res.send({
+        success: false,
+        msg: "New Password cannot be same as Old password",
+      });
+    } else {
+      const secPass = await bcrypt.hash(newPassword, 10);
+      await Customer.findByIdAndUpdate(customerId, {
+        password: secPass,
+      });
+      return res.send({ success: true, msg: "Password changed successfully" });
+    }
+  } catch (error) {
+    return res.send({ error: error.message });
   }
-}catch(error){
-  return res.send({ error: error.message });
-}
-}
-
+};
 
 // Forget Password
 const forgotCustomerPassword = async (req, res) => {
@@ -327,7 +336,7 @@ const resetCustomerPassword = async (req, res) => {
   });
 };
 
-// Delete Specific Customer 
+// Delete Specific Customer
 const DeleteCustomer = async (req, res, next) => {
   try {
     const customerId = req.body.id;
@@ -341,14 +350,124 @@ const DeleteCustomer = async (req, res, next) => {
     );
 
     if (!record) {
-      return res.send({success : true , message: "record not found" });
+      return res.send({ success: true, message: "record not found" });
     }
 
-    return res.send({success : true, message: "Successfully Deleted"});
+    return res.send({ success: true, message: "Successfully Deleted" });
   } catch (error) {
-    return res.send({ success : false , error: error.message });
+    return res.send({ success: false, error: error.message });
   }
 };
+
+const addToCart = async (req, res) => {
+  const CustomerId = req.params.id;
+  const { productId, quantity } = req.body;
+
+  try {
+    // Find the customer by ID and populate the cartItems field with product details
+    const customer = await Customer.findById(CustomerId).populate(
+      'cartItems.product'
+    );
+
+    if (!customer) {
+      return res.status(404).json({
+        success: false,
+        msg: 'Customer not found',
+      });
+    }
+
+    // Check if the product already exists in the cart
+    const existingCartItem = customer.cartItems.find(
+      (item) => item.product._id.toString() === productId
+    );
+
+    if (existingCartItem) {
+      // If the product already exists in the cart, update the quantity
+      existingCartItem.quantity += parseInt(quantity);
+    } else {
+      // If the product does not exist in the cart, add it as a new item
+      const product = await Product.findById(productId); // Replace 'Product' with your actual model name
+
+      if (!product) {
+        return res.status(404).json({
+          success: false,
+          msg: 'Product not found',
+        });
+      }
+
+      customer.cartItems.push({
+        product: product,
+        quantity: parseInt(quantity),
+      });
+    }
+
+    // Save the updated cart
+    await customer.save();
+
+    res.json({
+      success: true,
+      msg: 'Cart updated successfully',
+      updatedCart: customer,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      msg: 'Internal Server Error',
+    });
+  }
+};
+
+
+// Remove a product from the customer's cart
+const removeFromCart = async (req, res) => {
+  const customerId = req.params.id; // Customer ID
+  const {productId} = req.body; // Product ID
+
+  try {
+    // Find the customer by ID
+    const customer = await Customer.findById(customerId);
+
+    if (!customer) {
+      return res.status(404).json({
+        success: false,
+        msg: 'Customer not found',
+      });
+    }
+
+    // Check if the product exists in the cart
+    const cartItemIndex = customer.cartItems.findIndex(
+      (item) => item.product.toString() === productId
+    );
+
+    if (cartItemIndex === -1) {
+      return res.status(404).json({
+        success: false,
+        msg: 'Product not found in the cart',
+      });
+    }
+
+    // Remove the product from the cart
+    customer.cartItems.splice(cartItemIndex, 1);
+
+    // Save the updated cart
+    await customer.save();
+
+    res.json({
+      success: true,
+      msg: 'Product removed from the cart successfully',
+      updatedCart: customer,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      msg: 'Internal Server Error',
+    });
+  }
+};
+
+
 
 module.exports = {
   registerCustomer,
@@ -363,4 +482,6 @@ module.exports = {
   resetCustomerPassword,
   updateCustomer,
   DeleteCustomer,
+  addToCart,
+  removeFromCart
 };

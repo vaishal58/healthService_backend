@@ -1,6 +1,6 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
-const { registerCustomer, loginCustomer, getCustomers, getLoggedInCustomer, logoutCustomer, getSpecificCustomer, loginStatus, updateCustomerPassword, forgotCustomerPassword, resetCustomerPassword, updateCustomer, DeleteCustomer } = require("../controllers/customerController");
+const { registerCustomer, loginCustomer, getCustomers, getLoggedInCustomer, logoutCustomer, getSpecificCustomer, loginStatus, updateCustomerPassword, forgotCustomerPassword, resetCustomerPassword, updateCustomer, DeleteCustomer, addToCart, removeFromCart } = require("../controllers/customerController");
 const protect = require("../middlewares/authMiddleware");
 const router = express.Router();
 
@@ -18,6 +18,8 @@ router.post("/updatecustomerpassword/:id" ,updateCustomerPassword);
 router.post("/forgetpassword" ,forgotCustomerPassword);
 router.post("/resetpassword/:resetToken" , resetCustomerPassword);
 router.post("/deletecustomer" , DeleteCustomer);
+router.post("/addtocart/:id" , addToCart);
+router.post("/removefromcart/:id" , removeFromCart);
 
 
 module.exports = router;

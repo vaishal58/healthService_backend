@@ -26,8 +26,8 @@ const customerSchema = new mongoose.Schema({
   wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
   cartItems: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Cart",
+      product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
+      quantity: { type: Number, default: 1 }, // You can include the quantity as well
     },
   ],
   paymentMethods: [String],
