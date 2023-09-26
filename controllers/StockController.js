@@ -17,13 +17,13 @@ exports.createStock = async (req, res, next) => {
 
     await newStock.save();
 
-    res.status(201).json({
+    return res.send({
       success: true,
       message: "Stock entry created successfully",
       stock: { newStock: newStock },
     });
   } catch (error) {
-    res.status(500).json({
+    return res.send({
       success: false,
       error: "Internal Server Error",
     });
@@ -35,13 +35,13 @@ exports.getAllStock = async (req, res, next) => {
   try {
     const stocks = await Stock.find();
 
-    res.status(200).json({
+    return res.send({
       success: true,
       message: "Stock entries retrieved successfully",
       stocks,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.send({
       success: false,
       error: "Internal Server Error",
     });
@@ -56,19 +56,19 @@ exports.getStockById = async (req, res, next) => {
     const stock = await Stock.findById(stockId);
 
     if (!stock) {
-      return res.status(404).json({
+      return res.send({
         success: false,
         error: "Stock entry not found",
       });
     }
 
-    res.status(200).json({
+    return res.send({
       success: true,
       message: "Stock entry retrieved successfully",
       stock,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.send({
       success: false,
       error: "Internal Server Error",
     });
@@ -99,13 +99,13 @@ exports.updateStockById = async (req, res, next) => {
 
     await Stock.findByIdAndUpdate(stockId, updateData);
     const updatedStock = await Stock.findById(stockId);
-    res.status(200).json({
+    return res.send({
       success: true,
       message: "Stock entry updated successfully",
       stock: updatedStock,
     });
   } catch (error) {
-    res.status(500).json({
+    return res.send({
       success: false,
       error: "Internal Server Error",
     });
@@ -119,12 +119,12 @@ exports.deleteStockById = async (req, res, next) => {
 
     await Stock.findByIdAndDelete(stockId);
 
-    res.status(200).json({
+    return res.send({
       success: true,
       message: "Stock entry deleted successfully",
     });
   } catch (error) {
-    res.status(500).json({
+    return res.send({
       success: false,
       error: "Internal Server Error",
     });

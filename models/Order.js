@@ -38,11 +38,8 @@ const orderSchema = new mongoose.Schema({
     type: String,
   },
   couponCode: {
-    type: String,
-    default: null,
-  },
-  giftVoucher: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Coupon",
     default: null,
   },
   createdAt: {

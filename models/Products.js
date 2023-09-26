@@ -7,19 +7,14 @@ const productSchema = new mongoose.Schema({
   subCategory: { type: mongoose.Schema.Types.ObjectId, ref: "SubCategory" },
   subSubCategory: { type: mongoose.Schema.Types.ObjectId, ref: "SubSubCategory" },
   prices: {
-    original: { type: String },
-    discounted: { type: String },
+    original: { type: Number },
+    discounted: { type: Number },
   },
   imageGallery: {type: Array}, // Store an array of image URLs here
   stock: {
-    quantity:{type:String}
+    quantity:{type:Number}
    }, // Store the stock quantity here
   sku: { type: String , unique : true},
-  status: {
-    type: String,
-    enum: ["active", "inactive"],
-    default: "active",
-  }, 
   isActive:{ type: Boolean, default: true },
   isProductPopular: { type: Boolean, default: true }, 
   isProductNew: { type: Boolean, default: true },

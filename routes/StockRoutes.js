@@ -9,9 +9,9 @@ router.use(cookieParser());
 
 router.post("/getstocks", getAllStock);
 router.post("/createstock", createStock);
-// router.post("/getspecificstock/:id", getStockById);
+router.post("/getspecificstock/:id", getStockById);
 router.post("/updatestock/:id", updateStockById);
-router.post("/deletecontent/:id", deleteStockById);
+router.post("/deletestocks/:id", deleteStockById);
 
 
 module.exports = router;
