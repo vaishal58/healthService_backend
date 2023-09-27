@@ -33,10 +33,9 @@ const userSchema = new mongoose.Schema(
     roles: [
       { type: String, ref: 'Role' }
     ],
-    status: {
-      type: String,
-      enum: ["active", "inactive"],
-      default: "active",
+    active: {
+      type: Boolean,
+      default: true,
     },
   },
   {

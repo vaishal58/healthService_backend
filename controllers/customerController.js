@@ -19,7 +19,7 @@ const generateToken = (id) => {
 // Customer's Registration & Create Customer
 const registerCustomer = async (req, res) => {
   try {
-    const { username, email, password, confirmPassword, status } = req.body;
+    const { username, email, password, confirmPassword, active } = req.body;
     console.log(req.body);
 
     // Check if password and confirmPassword match
@@ -30,7 +30,7 @@ const registerCustomer = async (req, res) => {
       username: username,
       email: email,
       password: password,
-      status: status,
+      active: active,
     });
     return res.send({
       success: true,
@@ -185,7 +185,7 @@ const updateCustomer = async (req, res) => {
       phone: req.body.phone,
       orderHistory: req.body.orderHistory,
       paymentMethods: req.body.paymentMethods,
-      status: req.body.status,
+      active: req.body.active,
       deleted: req.body.deleted,
       updatedAt: Date.now(),
     };

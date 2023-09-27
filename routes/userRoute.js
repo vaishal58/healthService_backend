@@ -8,13 +8,13 @@ const { registerUser, loginUser, logout, getLoggedInUser, getSpecificUser, login
 
 router.use(cookieParser());
 
-router.post("/register" , upload.single('profilePhoto'), registerUser);
+router.post("/register" , upload.single('photo'), registerUser);
 router.post("/login" , loginUser);
 router.post("/logout" , logout);
 router.post("/getloggedinuser",protect, getLoggedInUser);
 router.post("/getspecificuser", getSpecificUser);
 router.post("/loggedin", loginStatus);
-router.post("/updateuser" , upload.single('profilePhoto') ,updateUser);
+router.post("/updateuser" , upload.single('photo') ,updateUser);
 router.post("/updatepassword", protect ,updatePassword);
 router.post("/forgotpassword",forgotPassword);
 router.post("/resetpassword/:resetToken",resetPassword);

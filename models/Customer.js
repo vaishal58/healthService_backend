@@ -35,10 +35,9 @@ const customerSchema = new mongoose.Schema({
     language: String,
     currency: String,
   },
-  status: {
-    type: String,
-    enum: ["active", "inactive"],
-    default: "active",
+  active: {
+    type: Boolean,
+    default: true,
   },
   deleted: {
     type: Boolean,

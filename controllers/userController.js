@@ -20,7 +20,7 @@ const generateToken = (id) => {
 
 const registerUser = asyncHandler(async (req, res) => {
   try {
-    const { name, email, password, confirmPassword ,roles, status } = req.body;
+    const { name, email, password, confirmPassword ,roles, active } = req.body;
     const ProfilePhoto = req.file.path;
     console.log(req.body);
 
@@ -36,11 +36,11 @@ const registerUser = asyncHandler(async (req, res) => {
       password: password,
       roles: roles,
       photo: ProfilePhoto,
-      status: status,
+      active: active,
     });
     return res.send({ success: true, msg: "User added successfully", user });
   } catch (error) {
-    return res.send({ error: error.message });
+    return res.send({ error: error.message});
   }
 });
 
@@ -100,7 +100,7 @@ const getLoggedInUser = asyncHandler(async (req, res) => {
   const user = await User.findById(userId);
 
   if (user) {
-    const { _id, name, email, photo, password, roles, status } = user;
+    const { _id, name, email, photo, password, roles, active } = user;
     return res.send({
       success: true,
       _id,
@@ -109,7 +109,7 @@ const getLoggedInUser = asyncHandler(async (req, res) => {
       photo,
       password,
       roles,
-      status,
+      active,
     });
   } else {
     return res.send({ success: false, msg: "User not found" });
@@ -122,7 +122,7 @@ const getSpecificUser = asyncHandler(async (req, res) => {
     let userId = req.body.id;
     const user = await User.findById(userId);
     if (user) {
-      const { _id, name, email, photo, roles, status } = user;
+      const { _id, name, email, photo, roles, active } = user;
       return res.send({
         success: true,
         _id,
@@ -130,7 +130,7 @@ const getSpecificUser = asyncHandler(async (req, res) => {
         email,
         photo,
         roles,
-        status,
+        active,
       });
     } else {
       return res.send({ success: false, msg: "User not found" });
@@ -161,7 +161,7 @@ const loginStatus = asyncHandler(async (req, res) => {
 //  Update User
 const updateUser = asyncHandler(async (req, res) => {
   if (req.body.id) {
-    const { id, name, roles, status } = req.body;
+    const { id, name, roles, active } = req.body;
     const user = await User.findById(id);
     const photo = req.file ? req.file.path : user.photo; // Get the path of the uploaded file
 
@@ -169,7 +169,7 @@ const updateUser = asyncHandler(async (req, res) => {
       name: name,
       roles: roles,
       photo: photo,
-      status: status,
+      active: active,
     });
 
     // if (!name || !roles || !photo || !status) {

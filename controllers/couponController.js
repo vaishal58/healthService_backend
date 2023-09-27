@@ -1,15 +1,16 @@
-const Coupon = require("../models/coupon");
+const Coupon = require("../models/Coupon");
 
 
 const createCoupon = async (req, res) => {
   try {
-    const { name, type, description, expiry, discount , active } = req.body;
+    const { name, type, description, start, expiry, discount , active } = req.body;
 
     // Create a new coupon
     const coupon = await Coupon.create({
       name,
       type,
       description,
+      start,
       expiry,
       discount,
       active,
@@ -111,7 +112,7 @@ const updateCouponById = async (req, res) => {
 // Delete a coupon by ID
 const deleteCouponById = async (req, res) => {
   try {
-    const { couponId } = req.params;
+    const  couponId  = req.params.id;
     const deletedCoupon = await Coupon.findByIdAndDelete(couponId);
 
     if (!deletedCoupon) {
