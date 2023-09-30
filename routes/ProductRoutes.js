@@ -9,7 +9,7 @@ const { addProduct, getAllProducts, getSpecificProduct, updateProduct, deletePro
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     console.log(req.files)
-    cb(null, "uploads/products/");
+    cb(null, "uploads/Products/");
   },
   filename: (req, file, cb) => {
     const originalFileName = file.originalname;

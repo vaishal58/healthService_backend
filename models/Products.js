@@ -14,6 +14,7 @@ const productSchema = new mongoose.Schema({
   stock: {
     quantity:{type:Number}
    }, // Store the stock quantity here
+   material: { type: Date, default: Date.now },
   sku: { type: String , unique : true},
   isActive:{ type: Boolean, default: true },
   isProductPopular: { type: Boolean, default: true }, 

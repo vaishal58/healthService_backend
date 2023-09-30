@@ -76,7 +76,7 @@ app.use("/coupons" , CouponRoutes);
 // app.use("/management" ,managementRoutes);
 
 // Error Middleware
-app.use(errorHandler);
+// app.use(errorHandler);
 app.use(protect);
 
 // ROUTES

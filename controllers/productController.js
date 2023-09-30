@@ -15,30 +15,20 @@ const addProduct = async (req, res, next) => {
     discounted,
     stock,
     sku,
-    status,
     isProductPopular,
     isProductNew,
     isActive
   } = req.body;
 
-  console.log(req.files)
-  console.log(req.body)
+  
+  const imageGalleryFiles = req.files; 
 
-
-  // Extract the main image and image gallery files
-  // const mainImageFile = req.file;
-  const imageGalleryFiles = req.files; // Assuming you use multipart form data for multiple files
-
-  // Check if main image and image gallery files exist
   if (!imageGalleryFiles || imageGalleryFiles.length === 0) {
     return res.status(400).send({
       success: false,
       error: "Main image and image gallery files are required.",
     });
   }
-
-  // Prepare main image and image gallery URLs
-  // const mainImage = mainImageFile.filename; // Assuming you're saving the main image
   const imageGallery = imageGalleryFiles.map((file) => file.filename);
 
   const productData = {
@@ -46,15 +36,13 @@ const addProduct = async (req, res, next) => {
     description : description,
     category : category,
     subCategory : subCategory,
-    subSubCategory : subSubCategory,
-    prices : {original : original , discounted : discounted},
-    // mainImage : mainImage,
+    subSubCategory : subSubCategory?subSubCategory:null,
+    prices : {original : original, discounted : discounted},
     imageGallery : imageGallery,
     stock : {quantity : stock},
     sku : sku,
-    status : status,
     isProductPopular : isProductPopular,
-    isProductNew : isProductNew , 
+    isProductNew : isProductNew, 
     isActive:isActive
   };
 
@@ -68,7 +56,6 @@ const addProduct = async (req, res, next) => {
   } catch (error) {
     console.log(error)
     if (error.code === 11000) {
-      // Duplicate key error (e.g., duplicate SKU)
       res.send({ success: false, error: "Duplicate SKU" });
     } else {
       res.send({ success: false, error: "Internal Server Error" });
@@ -103,23 +90,16 @@ const getSpecificProduct = async (req, res) => {
 
 // Update Product
 const updateProduct = async (req, res) => {
+  console.log("colled")
   try {
-    const productId = req.params.id; // Get the product ID from the route parameter
-
-    // Check if a valid product ID is provided
+    const productId = req.params.id;
     if (!productId) {
       return res.status(400).send({ success: false, message: "Product ID is required." });
     }
-
-    // Find the product by ID
     const product = await Product.findById(productId);
-
-    // Check if the product exists
     if (!product) {
       return res.status(404).send({ success: false, message: "Product not found." });
     }
-
-    // Extract updated product information from the request body
     const {
       name,
       description,
@@ -131,7 +111,6 @@ const updateProduct = async (req, res) => {
       imageGallery,
       stock,
       sku,
-      status,
       isProductPopular,
       isProductNew,
       isActive
@@ -139,28 +118,29 @@ const updateProduct = async (req, res) => {
 
     
     if (req.files && req.files.length > 0) {
-      // Handle multiple image files for the gallery
       req.files.forEach((file) => {
         imageGallery.push(file.path);
       });
     }
 
-    // Update the product with the new information, except for the mainImageURL
-    await Product.findByIdAndUpdate(productId, {
-      name,
-      description,
-      category,
-      subCategory,
-      subSubCategory,
-      prices: { original, discounted },
-      imageGallery, // Update the image gallery field
-      stock,
-      sku,
-      status,
-      isProductPopular,
-      isProductNew,
-      isActive
-    });
+  const productData = {
+    name : name,
+    description : description,
+    category : category,
+    subCategory : subCategory,
+    subSubCategory : subSubCategory?subSubCategory:null,
+    prices : {original : original, discounted : discounted},
+    imageGallery : imageGallery,
+    stock : {quantity : stock},
+    sku : sku,
+    isProductPopular : isProductPopular,
+    isProductNew : isProductNew, 
+    isActive:isActive
+  };
+    
+
+    console.log(productData)
+    await Product.findByIdAndUpdate(productId, productData);
 
     return res.send({
       success: true,
@@ -171,9 +151,6 @@ const updateProduct = async (req, res) => {
     res.send({ success: false, error: "Internal Server Error" });
   }
 };
-
-
-
 
 // Delete Product
 const deleteProduct = async (req, res) => {
