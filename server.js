@@ -48,11 +48,12 @@ app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({
     policy : "cross-origin"
 }));
-app.use(morgan("common"));
+app.use(morgan("combined"));
 app.use(cors());
 app.use("/uploads", express.static("./uploads"));
 app.use("/gallery-images", express.static("./uploads/Gallery"));
 app.use("/products", express.static("./uploads/Products"));
+app.use("/cagtegory", express.static("./uploads/Category"));
 
 
 // Routes Middleware
