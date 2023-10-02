@@ -4,7 +4,7 @@ const Product = require("../models/Products");
 // Create a new stock entry
 exports.createStock = async (req, res, next) => {
   try {
-    const { ProductId, quantity, currentPricePerUnit } = req.body;
+    const { ProductId, quantity,currentPricePerUnit , date } = req.body;
 
     const product = await Product.findById(ProductId);
 
@@ -13,6 +13,7 @@ exports.createStock = async (req, res, next) => {
       quantity,
       currentPricePerUnit,
       name: product.name,
+      date : date,
     });
 
     await newStock.save();
