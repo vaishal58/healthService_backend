@@ -15,6 +15,7 @@ const productSchema = new mongoose.Schema({
     quantity:{type:Number}
    }, // Store the stock quantity here
    material: { type: Date, default: Date.now },
+   gst:{type: mongoose.Schema.Types.ObjectId, ref: "tax_and_gst"},
   sku: { type: String , unique : true},
   isActive:{ type: Boolean, default: true },
   isProductPopular: { type: Boolean, default: true }, 

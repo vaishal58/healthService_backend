@@ -15,13 +15,13 @@ const addProduct = async (req, res, next) => {
     discounted,
     stock,
     sku,
+    gst,
     isProductPopular,
     isProductNew,
-    isActive
+    isActive,
   } = req.body;
 
-  
-  const imageGalleryFiles = req.files; 
+  const imageGalleryFiles = req.files;
 
   if (!imageGalleryFiles || imageGalleryFiles.length === 0) {
     return res.status(400).send({
@@ -30,20 +30,22 @@ const addProduct = async (req, res, next) => {
     });
   }
   const imageGallery = imageGalleryFiles.map((file) => file.filename);
+  console.log(req.body);
 
   const productData = {
-    name : name,
-    description : description,
-    category : category,
-    subCategory : subCategory,
-    subSubCategory : subSubCategory?subSubCategory:null,
-    prices : {original : original, discounted : discounted},
-    imageGallery : imageGallery,
-    stock : {quantity : stock},
-    sku : sku,
-    isProductPopular : isProductPopular,
-    isProductNew : isProductNew, 
-    isActive:isActive
+    name: name,
+    description: description,
+    category: category,
+    subCategory: subCategory,
+    subSubCategory: subSubCategory ? subSubCategory : null,
+    prices: { original: original, discounted: discounted },
+    imageGallery: imageGallery,
+    stock: { quantity: stock },
+    sku: sku,
+    gst: gst,
+    isProductPopular: isProductPopular,
+    isProductNew: isProductNew,
+    isActive: isActive,
   };
 
   try {
@@ -54,7 +56,7 @@ const addProduct = async (req, res, next) => {
       message: "Product added successfully",
     });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     if (error.code === 11000) {
       res.send({ success: false, error: "Duplicate SKU" });
     } else {
@@ -63,14 +65,13 @@ const addProduct = async (req, res, next) => {
   }
 };
 
-
 // Get All Products
-const getAllProducts = async (req, res) => {  
+const getAllProducts = async (req, res) => {
   try {
     const products = await Product.find().exec();
-   return res.send({ success: true, products });
+    return res.send({ success: true, products });
   } catch (error) {
-   return  res.send({ success: false, error: "Failed to fetch products." });
+    return res.send({ success: false, error: "Failed to fetch products." });
   }
 };
 
@@ -89,82 +90,127 @@ const getSpecificProduct = async (req, res) => {
 };
 
 // Update Product
-const updateProduct = async (req, res) => {
-  console.log("colled")
+// const updateProduct = async (req, res) => {
+//   console.log("body of req",req.body);
+//   try {
+//     const productId = req.params.id;
+//     if (!productId) {
+//       return res
+//         .status(400)
+//         .send({ success: false, message: "Product ID is required." });
+//     }
+//     const product = await Product.findById(productId);
+//     if (!product) {
+//       return res
+//         .status(404)
+//         .send({ success: false, message: "Product not found." });
+//     }
+//     const {
+//       name,
+//       description,
+//       category,
+//       subCategory,
+//       subSubCategory,
+//       original,
+//       discounted,
+//       stock,
+//       sku,
+//       gst,
+//       isProductPopular,
+//       isProductNew,
+//       isActive,
+//     } = req.body;
+  
+
+//     if (req.files && req.files.length > 0) {
+//       req.files.forEach((file) => {
+//         imageGallery.push(file.path);
+//       });
+//     }
+
+//     const productData = {
+//       name: name,
+//       description: description,
+//       category: category,
+//       subCategory: subCategory,
+//       subSubCategory: subSubCategory ? subSubCategory : null,
+//       prices: { original: original, discounted: discounted },
+//       imageGallery: imageGallery,
+//       stock: { quantity: stock },
+//       sku: sku,
+//       gst: gst,
+
+//       isProductPopular: isProductPopular,
+//       isProductNew: isProductNew,
+//       isActive: isActive,
+//     };
+
+//     await Product.findByIdAndUpdate(productId, productData);
+
+//     return res.send({
+//       success: true,
+//       message: "Product updated successfully.",
+//     });
+//   } catch (error) {
+//     console.error("Update Error:", error);
+//     res.send({ success: false, error: "Internal Server Error" });
+//   }
+// };
+
+const updateProduct = async (req, res, next) => {
   try {
-    const productId = req.params.id;
-    if (!productId) {
-      return res.status(400).send({ success: false, message: "Product ID is required." });
+    const Id = req.params.id;
+    const productToUpdate = await Product.findById(Id);
+
+      console.log(req.body)
+    if (!productToUpdate) {
+      return res.send({ error: 'SubSubCategory not found' });
     }
-    const product = await Product.findById(productId);
-    if (!product) {
-      return res.status(404).send({ success: false, message: "Product not found." });
-    }
-    const {
-      name,
-      description,
-      category,
-      subCategory,
-      subSubCategory,
-      original,
-      discounted,
-      imageGallery,
-      stock,
-      sku,
-      isProductPopular,
-      isProductNew,
-      isActive
-    } = req.body;
+         const productData = {
+       name: req.body.name,
+       description: req.body.description,
+       category: req.body.category,
+       subCategory: req.body.subCategory,
+       subSubCategory: req.body.subSubCategory ? req.body.subSubCategory : null,
+       prices: { original: req.body.original, discounted: req.body.discounted },
+       imageGallery: req.body.imageGallery,
+       stock: { quantity: req.body.stock },
+       sku: req.body.sku,
+       gst: req.body.gst,
+       isProductPopular: req.body.isProductPopular,
+       isProductNew: req.body.isProductNew,
+       isActive: req.body.isActive,
+     };
 
-    
-    if (req.files && req.files.length > 0) {
-      req.files.forEach((file) => {
-        imageGallery.push(file.path);
-      });
-    }
+    await Product.findByIdAndUpdate(Id, productData);
+    const UpdatedProduct = await Product.findById(Id);
 
-  const productData = {
-    name : name,
-    description : description,
-    category : category,
-    subCategory : subCategory,
-    subSubCategory : subSubCategory?subSubCategory:null,
-    prices : {original : original, discounted : discounted},
-    imageGallery : imageGallery,
-    stock : {quantity : stock},
-    sku : sku,
-    isProductPopular : isProductPopular,
-    isProductNew : isProductNew, 
-    isActive:isActive
-  };
-    
-
-    console.log(productData)
-    await Product.findByIdAndUpdate(productId, productData);
-
-    return res.send({
+    res.send({
       success: true,
-      message: "Product updated successfully.",
+      msg: 'SubSubCategory updated successfully',
+      data: UpdatedProduct,
     });
   } catch (error) {
-    console.error('Update Error:', error);
-    res.send({ success: false, error: "Internal Server Error" });
+    return res.send({ error: error.message });
   }
 };
 
 // Delete Product
 const deleteProduct = async (req, res) => {
-    const productId = req.params.id;
-    try {
-      const deletedProduct = await Product.findByIdAndRemove(productId);
-      if (!deletedProduct) {
-        return res.send({success : false  , message: "Product not found."});
-      }
-       return res.send({ success : true, message: "Product deleted successfully." });
-    } catch (error) {
-      return res.send({ success : false ,  error: "Failed to delete the product." });
+  const productId = req.params.id;
+  try {
+    const deletedProduct = await Product.findByIdAndRemove(productId);
+    if (!deletedProduct) {
+      return res.send({ success: false, message: "Product not found." });
     }
-  };
+    return res.send({
+      success: true,
+      message: "Product deleted successfully.",
+    });
+  } catch (error) {
+    return res.send({ success: false, error: "Failed to delete the product." });
+  }
+};
 
 module.exports = {
   getAllProducts,
