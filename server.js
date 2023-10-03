@@ -26,7 +26,12 @@ const galleryRoutes = require("./routes/GalleryCatMasterRoutes");
 const galleryDetailsRoutes = require("./routes/GalleryMasterRoutes");
 const StocksRoutes = require("./routes/StockRoutes");
 const CouponRoutes = require("./routes/couponRoutes");
+
 const Gst = require("./routes/gstRoutes");
+
+const DailyRatesRoutes = require("./routes/PricetypeRoutes");
+
+
 
 // const menuRoutes = require("./routes/menuRoutes");
 
@@ -80,6 +85,7 @@ app.use("/products", express.static("./uploads/Products"));
 app.use("/cagtegory", express.static("./uploads/Category"));
 
 // Routes Middleware
+
 app.use("/api", userRoute);
 app.use("/api", roleRoutes);
 app.use("/category", productCatRoutes);
@@ -94,6 +100,8 @@ app.use("/orders", orderRoutes);
 app.use("/stocks", StocksRoutes);
 app.use("/coupons", CouponRoutes);
 app.use("/gst", Gst);
+app.use("/dailyrates" , DailyRatesRoutes);
+
 
 // app.use("/api" , menuRoutes);
 // app.use("/general" ,generelRoutes);

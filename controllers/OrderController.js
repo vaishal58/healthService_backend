@@ -1,4 +1,5 @@
 const Order = require('../models/Order');
+const Customer = require("../models/Customer");
 
 exports.getOrders = async (req, res, next) => {
   try {
@@ -15,27 +16,39 @@ exports.getOrders = async (req, res, next) => {
 exports.createOrder = async (req, res, next) => {
   const {
     customer,
+    FirstName,
+    LastName,
     products,
     status,
     totalAmount,
-    billingAddress,
+    country,
+    state,
+    city,
+    postCode,
     shippingAddress,
     paymentMethod,
     couponCode,
     giftVoucher,
   } = req.body;
 
+  console.log(req.body);
+
   try {
     const newOrder = await Order.create({
       customer: customer,
+      FirstName : FirstName,
+      LastName : LastName,
       products: products,
       status: status,
       totalAmount: totalAmount,
-      billingAddress: billingAddress,
+      country : country,
+      state : state,
+      city : city,
+      postCode : postCode,
       shippingAddress: shippingAddress,
       paymentMethod: paymentMethod,
-      couponCode: couponCode,
-      giftVoucher: giftVoucher,
+      // couponCode: couponCode,
+      // giftVoucher: giftVoucher,
     });
 
     return res.send({
