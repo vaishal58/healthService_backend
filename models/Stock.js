@@ -6,16 +6,15 @@ const stockSchema = new mongoose.Schema({
   ProductId: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
   name: { type:String },
   quantity: {
-    type: String,
+    type: Number,
     required: true,
   },
   currentPricePerUnit: {
-    type: String,
+    type: Number,
     required: true,
   },
   date: {
     type: Date,
-    value: Date.now,
   },
 });
 

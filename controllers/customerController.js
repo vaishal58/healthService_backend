@@ -19,7 +19,7 @@ const generateToken = (id) => {
 // Customer's Registration & Create Customer
 const registerCustomer = async (req, res) => {
   try {
-    const { username, email, password, confirmPassword, active } = req.body;
+    const { username, email, password, confirmPassword, phone , active } = req.body;
     console.log(req.body);
 
     // Check if password and confirmPassword match
@@ -30,6 +30,7 @@ const registerCustomer = async (req, res) => {
       username: username,
       email: email,
       password: password,
+      phone : phone,
       active: active,
     });
     return res.send({
@@ -54,7 +55,6 @@ const loginCustomer = async (req, res) => {
   try {
     // Check if the customer exists
     const customer = await Customer.findOne({ email });
-    console.log(customer);
 
     if (!customer) {
       return res.send({ success: false, msg: "User not found" });
@@ -68,7 +68,10 @@ const loginCustomer = async (req, res) => {
       const token = generateToken(customer._id);
 
       // Fetch the customer's cart items
-      const cart = await Cart.findOne({ CustomerId: customer._id });
+      // const CustomerId = customer._id;
+      // console.log(CustomerId , 1);
+      // const cart = await Cart.findById({ CustomerId});
+      // console.log(cart);
 
       // Send HTTP-only cookie
       res.cookie("token", token, {
@@ -83,7 +86,7 @@ const loginCustomer = async (req, res) => {
         success: true,
         msg: "Successfully LoggedIn",
         token: token,
-        cart: cart,
+        customer: customer,
       });
     } else {
       return res.send({ success: false, msg: "Invalid user data" });
@@ -93,6 +96,7 @@ const loginCustomer = async (req, res) => {
     return res.send({ success: false, msg: "Server error" });
   }
 };
+
 
 // Customer's Logout
 const logoutCustomer = async (req, res) => {

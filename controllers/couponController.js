@@ -74,7 +74,7 @@ const getCouponById = async (req, res) => {
 const updateCouponById = async (req, res) => {
   try {
     const couponId = req.params.id;
-    const { name, type, description, expiry, discount , active } = req.body;
+    const { name, type, description, expiry, start, discount , active } = req.body;
 
     const updatedCoupon = await Coupon.findByIdAndUpdate(
       couponId,
@@ -82,6 +82,7 @@ const updateCouponById = async (req, res) => {
         name,
         type,
         description,
+        start,
         expiry,
         discount,
         active,
