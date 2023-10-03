@@ -1,18 +1,38 @@
 const Category = require('../models/ProductCat'); // Import the Category model
 
 // Create a new category
+
 exports.createCategory = async (req, res) => {
-  try {
-    const category = new Category(req.body);
-    await category.save();
-     return res.send({success : true , msg:"Category Added Succesfully" ,category});
-  } catch (err) {
-    return res.send({ error: err.message });
-  }
+  console.log(req.file)
+  const body = {
+    name: req.body.name,
+    description: req.body.description,
+    image: req.file ? req.file.filename : "",
+  };
+  console.log(body)
+  const ItemIsUnique =
+    (await Category.find({
+      name: req.body.name,
+     
+    }).count()) === 0;
+    if (ItemIsUnique) {
+      const newRecordAdded = await Category.create(body);
+      res.status(201).json({
+        data: newRecordAdded,
+        message: "category added successfully",
+      });
+    } else {
+      return res.status(400).send({ error: `record with name '${body.name}' already exists` });
+    }
 };
 
 // Get all categories
 exports.getAllCategories = async (req, res) => {
+  const body = {
+    name: req.body.name,
+    description: req.body.description,
+    image: req.file ? req.file.filename : "",
+  };
   try {
     const categories = await Category.find({ isDeleted: false });
     return res.send(categories);
@@ -49,8 +69,9 @@ exports.updateCategoryById = async (req, res, next) => {
     }
 
     const updateData = {
-      name: req.body.name, // Replace 'name' with the field you want to update
-      // Add more fields as needed
+      name: req.body.name,
+      description: req.body.description,
+      image: req.file ? req.file.filename : categoryToUpdate.image, 
     };
 
     await Category.findByIdAndUpdate(categoryId, updateData);
