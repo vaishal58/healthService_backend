@@ -6,6 +6,12 @@ const orderSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Customer",
   },
+  FirstName : {
+  type: String,
+  },
+  LastName : {
+  type: String,
+  },
   products: [
     {
       product: {
@@ -13,9 +19,6 @@ const orderSchema = new mongoose.Schema({
         ref: "Product",
       },
       quantity: {
-        type: Number,
-      },
-      price: {
         type: Number,
       },
     },
@@ -34,8 +37,61 @@ const orderSchema = new mongoose.Schema({
   shippingAddress: {
     type: String,
   },
+  country : {
+    type : String,
+    enum : [
+      "India",
+    ]
+  },
+  state: {
+    type: String,
+    enum: [
+      "Andhra Pradesh",
+      "Arunachal Pradesh",
+      "Assam",
+      "Bihar",
+      "Chhattisgarh",
+      "Goa",
+      "Gujarat",
+      "Haryana",
+      "Himachal Pradesh",
+      "Jharkhand",
+      "Karnataka",
+      "Kerala",
+      "Madhya Pradesh",
+      "Maharashtra",
+      "Manipur",
+      "Meghalaya",
+      "Mizoram",
+      "Nagaland",
+      "Odisha",
+      "Punjab",
+      "Rajasthan",
+      "Sikkim",
+      "Tamil Nadu",
+      "Telangana",
+      "Tripura",
+      "Uttar Pradesh",
+      "Uttarakhand",
+      "West Bengal",
+      "Andaman and Nicobar Islands",
+      "Chandigarh",
+      "Dadra and Nagar Haveli and Daman and Diu",
+      "Lakshadweep",
+      "Delhi",
+      "Puducherry"
+    ],
+  }, 
+  city : {
+    type : String,
+  },
+  postCode : {
+    type : String,
+  },
   paymentMethod: {
     type: String,
+    enum: ["COD", "Net Banking", "PayPal", "UPI"],
+    default: "COD",
   },
   couponCode: {
     type: mongoose.Schema.Types.ObjectId,

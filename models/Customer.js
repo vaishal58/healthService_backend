@@ -28,6 +28,7 @@ const customerSchema = new mongoose.Schema({
     {
       product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
       quantity: { type: Number, default: 1 }, // You can include the quantity as well
+      tax:{type:Number}
     },
   ],
   paymentMethods: [String],

@@ -1,5 +1,4 @@
 const Customer = require("../models/Customer");
-const Cart = require("../models/Cart");
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
@@ -8,6 +7,8 @@ const Token = require("../models/tokenModel");
 const crypto = require("crypto");
 const sendEmail = require("../utils/sendEmail");
 const Product = require("../models/Products");
+const gstModel = require('../models/Gst');
+
 
 const app = express();
 app.use(cookieParser());
@@ -19,7 +20,8 @@ const generateToken = (id) => {
 // Customer's Registration & Create Customer
 const registerCustomer = async (req, res) => {
   try {
-    const { username, email, password, confirmPassword, phone , active } = req.body;
+    const { username, email, password, confirmPassword, phone, active } =
+      req.body;
     console.log(req.body);
 
     // Check if password and confirmPassword match
@@ -30,7 +32,7 @@ const registerCustomer = async (req, res) => {
       username: username,
       email: email,
       password: password,
-      phone : phone,
+      phone: phone,
       active: active,
     });
     return res.send({
@@ -46,6 +48,7 @@ const registerCustomer = async (req, res) => {
 // Customer's Login
 const loginCustomer = async (req, res) => {
   const { email, password } = req.body;
+  console.log(req.body);
 
   // Validation
   if (!email || !password) {
@@ -57,7 +60,7 @@ const loginCustomer = async (req, res) => {
     const customer = await Customer.findOne({ email });
 
     if (!customer) {
-      return res.send({ success: false, msg: "User not found" });
+      return res.send({ success: false, msg: "Invalid Credentials" });
     }
 
     // Check if the password is correct
@@ -96,7 +99,6 @@ const loginCustomer = async (req, res) => {
     return res.send({ success: false, msg: "Server error" });
   }
 };
-
 
 // Customer's Logout
 const logoutCustomer = async (req, res) => {
@@ -176,7 +178,7 @@ const loginStatus = async (req, res) => {
 // Update Customer
 const updateCustomer = async (req, res) => {
   try {
-    const CustomerId = req.body.id;
+    const CustomerId = req.params.id;
     console.log(CustomerId);
     const customer = await Customer.findById(CustomerId);
     if (!customer) {
@@ -192,6 +194,7 @@ const updateCustomer = async (req, res) => {
       active: req.body.active,
       deleted: req.body.deleted,
       updatedAt: Date.now(),
+      
     };
 
     await Customer.findByIdAndUpdate(CustomerId, updateData);
@@ -363,20 +366,22 @@ const DeleteCustomer = async (req, res, next) => {
   }
 };
 
+// Add to Cart
 const addToCart = async (req, res) => {
   const CustomerId = req.params.id;
   const { productId, quantity } = req.body;
+  console.log(req.body);
 
   try {
     // Find the customer by ID and populate the cartItems field with product details
     const customer = await Customer.findById(CustomerId).populate(
-      'cartItems.product'
+      "cartItems.product"
     );
 
     if (!customer) {
       return res.status(404).json({
         success: false,
-        msg: 'Customer not found',
+        msg: "Customer not found",
       });
     }
 
@@ -391,42 +396,83 @@ const addToCart = async (req, res) => {
     } else {
       // If the product does not exist in the cart, add it as a new item
       const product = await Product.findById(productId); // Replace 'Product' with your actual model name
+      const GST = await gstModel.findById(product.gst); // Replace 'Product' with your actual model name
 
       if (!product) {
         return res.status(404).json({
           success: false,
-          msg: 'Product not found',
+          msg: "Product not found",
         });
       }
 
       customer.cartItems.push({
         product: product,
         quantity: parseInt(quantity),
+        tax : GST.gst
       });
     }
-
     // Save the updated cart
     await customer.save();
 
-    res.json({
+    return res.send({
       success: true,
-      msg: 'Cart updated successfully',
+      msg: "Cart updated successfully",
       updatedCart: customer,
     });
   } catch (error) {
     console.error(error);
     res.status(500).json({
       success: false,
-      msg: 'Internal Server Error',
+      msg: "Internal Server Error",
     });
   }
 };
 
+// GetLoggedInCustomer's Cart Item
+const getLoggedInCustomerCartItems = async (req, res) => {
+  const customerId = req.params.id; // Customer ID
+
+  try {
+    // Find the customer by ID and populate the cartItems field with product details
+    const customer = await Customer.findById(customerId).populate(
+      "cartItems.product"
+    );
+
+    if (!customer) {
+      return res.status(404).json({
+        success: false,
+        msg: "Customer not found",
+      });
+    }
+
+    // Extract relevant cart information with complete product details
+    const cartItems = customer.cartItems.map((item) => ({
+      product: item.product,
+      quantity: item.quantity,
+      tax:item.tax,
+      totalTax:item.totalTax
+      // Add other product details if needed
+    }));
+
+    return res.send({
+      success: true,
+      cartItems,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.send({
+      success: false,
+      msg: "Internal Server Error",
+    });
+  }
+};
 
 // Remove a product from the customer's cart
 const removeFromCart = async (req, res) => {
   const customerId = req.params.id; // Customer ID
-  const {productId} = req.body; // Product ID
+  const { productId } = req.body; // Product ID
+  console.log(req.body);
+  console.log(req.params.id);
 
   try {
     // Find the customer by ID
@@ -435,7 +481,7 @@ const removeFromCart = async (req, res) => {
     if (!customer) {
       return res.status(404).json({
         success: false,
-        msg: 'Customer not found',
+        msg: "Customer not found",
       });
     }
 
@@ -444,12 +490,12 @@ const removeFromCart = async (req, res) => {
       (item) => item.product.toString() === productId
     );
 
-    if (cartItemIndex === -1) {
-      return res.status(404).json({
-        success: false,
-        msg: 'Product not found in the cart',
-      });
-    }
+    // if (cartItemIndex === -1) {
+    //   return res.send({
+    //     success: false,
+    //     msg: "Product not found in the cart",
+    //   });
+    // }
 
     // Remove the product from the cart
     customer.cartItems.splice(cartItemIndex, 1);
@@ -457,21 +503,152 @@ const removeFromCart = async (req, res) => {
     // Save the updated cart
     await customer.save();
 
-    res.json({
+    return res.send({
       success: true,
-      msg: 'Product removed from the cart successfully',
+      msg: "Product removed from the cart successfully",
       updatedCart: customer,
     });
   } catch (error) {
     console.error(error);
     res.status(500).json({
       success: false,
-      msg: 'Internal Server Error',
+      msg: "Internal Server Error",
     });
   }
 };
 
+// Remove All Item From Cart
+const removeAllFromCart = async (req, res) => {
+  const customerId = req.params.id; // Customer ID
 
+  try {
+    // Find the customer by ID
+    const customer = await Customer.findById(customerId);
+
+    if (!customer) {
+      return res.send({
+        success: false,
+        msg: "Customer not found",
+      });
+    }
+
+    // Remove all products from the cart
+    customer.cartItems = [];
+
+    // Save the updated cart
+    await customer.save();
+
+    res.send({
+      success: true,
+      msg: "All products removed from the cart successfully",
+      updatedCart: customer,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      msg: "Internal Server Error",
+    });
+  }
+};
+
+// UpdateCartItems
+const updateCartItem = async (req, res) => {
+  const customerId = req.params.id; // Customer ID
+  const { cartItems } = req.body; // Product ID and updated quantity
+
+  try {
+    // Find the customer by ID
+    const customer = await Customer.findById(customerId);
+
+    if (!customer) {
+      return res.status(404).json({
+        success: false,
+        msg: "Customer not found",
+      });
+    }
+
+    // Check if the product exists in the cart
+    // const cartItem = customer.cartItems.find(
+    //   (item) => item.product.toString() === productId
+    // );
+
+    // if (!cartItem) {
+    //   return res.status(404).json({
+    //     success: false,
+    //     msg: 'Product not found in the cart',
+    //   });
+    // }
+
+    // // Update the quantity of the product in the cart
+    // cartItem.quantity = parseInt(updatedQuantity);
+
+    // Save the updated cart
+    const updatedCart = await Customer.findByIdAndUpdate(customerId, req.body);
+    if (updatedCart) {
+      const customer = await Customer.findById(customerId);
+
+      return res.send({
+        success: true,
+        msg: "Quantity updated in the cart successfully",
+        updatedCart: customer,
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    return res.send({
+      success: false,
+      msg: "Internal Server Error",
+    });
+  }
+};
+
+//Adding Products to wishlist
+const addToWishlist = async (req, res) => {
+  const customerId = req.params.id;
+  const { productId } = req.body;
+
+  try {
+    // Find the customer by ID
+    const customer = await Customer.findById(customerId);
+
+    if (!customer) {
+      return res.status(404).json({
+        success: false,
+        msg: "Customer not found",
+      });
+    }
+
+    // Check if the product already exists in the wishlist
+    const existingWishlistItem = customer.wishlist.find(
+      (item) => item.toString() === productId
+    );
+
+    if (!existingWishlistItem) {
+      // If the product does not exist in the wishlist, add it
+      customer.wishlist.push(productId);
+      await customer.save();
+
+      return res.send({
+        success: true,
+        msg: "Product added to wishlist successfully",
+        updatedCustomer: customer,
+      });
+    } else {
+      // If the product already exists in the wishlist, return a message
+      return res.send({
+        success: false,
+        msg: "Product is already in the wishlist",
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      msg: "Internal Server Error",
+    });
+  }
+};
 
 module.exports = {
   registerCustomer,
@@ -487,5 +664,9 @@ module.exports = {
   updateCustomer,
   DeleteCustomer,
   addToCart,
-  removeFromCart
+  removeFromCart,
+  getLoggedInCustomerCartItems,
+  removeAllFromCart,
+  updateCartItem,
+  addToWishlist,
 };

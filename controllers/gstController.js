@@ -33,4 +33,18 @@ exports.getGst = async (req, res) => {
   }
 };
 
+exports.getSpecificGSTbyId = async (req, res) => {
+  try {
+    const  id = req.params.id; 
+    const gstEntry = await gstModel.findById(id);
+
+    if (!gstEntry) {
+      return res.status(404).send({ error: 'GST entry not found' });
+    }
+
+    return res.send(gstEntry);
+  } catch (err) {
+    return res.send({ error: 'Server error' });
+  }
+};
 
