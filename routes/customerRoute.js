@@ -13,7 +13,7 @@ router.post("/getcustomers" , getCustomers);
 router.post("/getloggedincustomer" , protect ,getLoggedInCustomer);
 router.post("/getspecificcustomer/:id" , getSpecificCustomer);
 router.post("/getloginstatus" , loginStatus);
-router.post("/updatecustomer" , updateCustomer);
+router.post("/updatecustomer/:id" , updateCustomer);
 router.post("/updatecustomerpassword/:id" ,updateCustomerPassword);
 router.post("/forgetpassword" ,forgotCustomerPassword);
 router.post("/resetpassword/:resetToken" , resetCustomerPassword);

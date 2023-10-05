@@ -1,5 +1,4 @@
 const Customer = require("../models/Customer");
-// const Cart = require("../models/Cart");
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
@@ -8,7 +7,8 @@ const Token = require("../models/tokenModel");
 const crypto = require("crypto");
 const sendEmail = require("../utils/sendEmail");
 const Product = require("../models/Products");
-const { default: mongoose } = require("mongoose");
+const gstModel = require('../models/Gst');
+
 
 const app = express();
 app.use(cookieParser());
@@ -60,7 +60,7 @@ const loginCustomer = async (req, res) => {
     const customer = await Customer.findOne({ email });
 
     if (!customer) {
-      return res.send({ success: false, msg: "User not found" });
+      return res.send({ success: false, msg: "Invalid Credentials" });
     }
 
     // Check if the password is correct
@@ -178,7 +178,7 @@ const loginStatus = async (req, res) => {
 // Update Customer
 const updateCustomer = async (req, res) => {
   try {
-    const CustomerId = req.body.id;
+    const CustomerId = req.params.id;
     console.log(CustomerId);
     const customer = await Customer.findById(CustomerId);
     if (!customer) {
@@ -194,6 +194,7 @@ const updateCustomer = async (req, res) => {
       active: req.body.active,
       deleted: req.body.deleted,
       updatedAt: Date.now(),
+      
     };
 
     await Customer.findByIdAndUpdate(CustomerId, updateData);
@@ -395,6 +396,7 @@ const addToCart = async (req, res) => {
     } else {
       // If the product does not exist in the cart, add it as a new item
       const product = await Product.findById(productId); // Replace 'Product' with your actual model name
+      const GST = await gstModel.findById(product.gst); // Replace 'Product' with your actual model name
 
       if (!product) {
         return res.status(404).json({
@@ -406,6 +408,7 @@ const addToCart = async (req, res) => {
       customer.cartItems.push({
         product: product,
         quantity: parseInt(quantity),
+        tax : GST.gst
       });
     }
     // Save the updated cart
@@ -446,6 +449,8 @@ const getLoggedInCustomerCartItems = async (req, res) => {
     const cartItems = customer.cartItems.map((item) => ({
       product: item.product,
       quantity: item.quantity,
+      tax:item.tax,
+      totalTax:item.totalTax
       // Add other product details if needed
     }));
 
@@ -466,6 +471,8 @@ const getLoggedInCustomerCartItems = async (req, res) => {
 const removeFromCart = async (req, res) => {
   const customerId = req.params.id; // Customer ID
   const { productId } = req.body; // Product ID
+  console.log(req.body);
+  console.log(req.params.id);
 
   try {
     // Find the customer by ID
@@ -483,12 +490,12 @@ const removeFromCart = async (req, res) => {
       (item) => item.product.toString() === productId
     );
 
-    if (cartItemIndex === -1) {
-      return res.status(404).json({
-        success: false,
-        msg: "Product not found in the cart",
-      });
-    }
+    // if (cartItemIndex === -1) {
+    //   return res.send({
+    //     success: false,
+    //     msg: "Product not found in the cart",
+    //   });
+    // }
 
     // Remove the product from the cart
     customer.cartItems.splice(cartItemIndex, 1);
@@ -496,7 +503,7 @@ const removeFromCart = async (req, res) => {
     // Save the updated cart
     await customer.save();
 
-    res.json({
+    return res.send({
       success: true,
       msg: "Product removed from the cart successfully",
       updatedCart: customer,
@@ -519,7 +526,7 @@ const removeAllFromCart = async (req, res) => {
     const customer = await Customer.findById(customerId);
 
     if (!customer) {
-      return res.status(404).json({
+      return res.send({
         success: false,
         msg: "Customer not found",
       });
