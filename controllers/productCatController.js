@@ -7,6 +7,7 @@ exports.createCategory = async (req, res) => {
   const body = {
     name: req.body.name,
     description: req.body.description,
+    noOfProducts: req.body.noOfProducts,
     image: req.file ? req.file.filename : "",
   };
   console.log(body)
@@ -71,6 +72,7 @@ exports.updateCategoryById = async (req, res, next) => {
     const updateData = {
       name: req.body.name,
       description: req.body.description,
+    noOfProducts: req.body.noOfProducts,
       image: req.file ? req.file.filename : categoryToUpdate.image, 
     };
 

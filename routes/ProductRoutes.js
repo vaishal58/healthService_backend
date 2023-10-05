@@ -32,7 +32,7 @@ const upload = multer({ storage: storage, fileFilter: imageFileFilter });
 router.post("/addproduct", upload.array("imageGallery", 10), addProduct);
 router.post("/getallproducts", getAllProducts);
 router.post("/getspecificproduct/:id", getSpecificProduct);
-router.post("/updateproduct/:id", updateProduct);
+router.post("/updateproduct/:id",upload.array("imageGallery", 10), updateProduct);
 router.post("/deleteproduct/:id", deleteProduct);
 
 

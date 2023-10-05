@@ -157,12 +157,12 @@ const getSpecificProduct = async (req, res) => {
 //   }
 // };
 
-const updateProduct = async (req, res, next) => {
+const updateProduct = async (req, res) => {
   try {
     const Id = req.params.id;
+    const imageGalleryFiles = req.files;
     const productToUpdate = await Product.findById(Id);
 
-      console.log(req.body)
     if (!productToUpdate) {
       return res.send({ error: 'SubSubCategory not found' });
     }
@@ -181,6 +181,14 @@ const updateProduct = async (req, res, next) => {
        isProductNew: req.body.isProductNew,
        isActive: req.body.isActive,
      };
+
+     const addedImages = imageGalleryFiles.map((file) => file.filename);
+
+     if (addedImages.length > 0) {
+      productData.imageGallery = productData.imageGallery.concat(addedImages);
+    }
+
+    console.log(addedImages)
 
     await Product.findByIdAndUpdate(Id, productData);
     const UpdatedProduct = await Product.findById(Id);
