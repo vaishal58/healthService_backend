@@ -26,9 +26,10 @@ const galleryRoutes = require("./routes/GalleryCatMasterRoutes");
 const galleryDetailsRoutes = require("./routes/GalleryMasterRoutes");
 const StocksRoutes = require("./routes/StockRoutes");
 const CouponRoutes = require("./routes/couponRoutes");
-
+const MaterialRoutes = require("./routes/MaterialRoutes");
+const ColorRoutes = require("./routes/ColorRoutes");
+const SeasonRoutes = require("./routes/SeasonRoutes");
 const Gst = require("./routes/gstRoutes");
-
 const DailyRatesRoutes = require("./routes/PricetypeRoutes");
 
 
@@ -101,6 +102,10 @@ app.use("/stocks", StocksRoutes);
 app.use("/coupons", CouponRoutes);
 app.use("/gst", Gst);
 app.use("/dailyrates" , DailyRatesRoutes);
+app.use("/material" , MaterialRoutes);
+app.use("/color" , ColorRoutes);
+app.use("/season" , SeasonRoutes);
+
 
 
 // app.use("/api" , menuRoutes);

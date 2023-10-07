@@ -11,14 +11,23 @@ const addProduct = async (req, res, next) => {
     category,
     subCategory,
     subSubCategory,
+    Tags,
     original,
     discounted,
     stock,
-    sku,
+    material,
+    color,
+    season,
     gst,
+    sku,
+    calculationOnWeight,
+    weightType,
+    weight,
+    labourCost,
+    DiscountedlabourCost,
+    isActive,
     isProductPopular,
     isProductNew,
-    isActive,
   } = req.body;
 
   const imageGalleryFiles = req.files;
@@ -29,23 +38,32 @@ const addProduct = async (req, res, next) => {
       error: "Main image and image gallery files are required.",
     });
   }
+
   const imageGallery = imageGalleryFiles.map((file) => file.filename);
-  console.log(req.body);
 
   const productData = {
     name: name,
     description: description,
     category: category,
     subCategory: subCategory,
-    subSubCategory: subSubCategory ? subSubCategory : null,
+    subSubCategory: subSubCategory,
+    Tags: Tags,
     prices: { original: original, discounted: discounted },
     imageGallery: imageGallery,
     stock: { quantity: stock },
-    sku: sku,
+    material: material,
+    color: color,
+    season: season,
     gst: gst,
+    sku: sku,
+    calculationOnWeight: calculationOnWeight,
+    weightType: weightType,
+    weight: weight,
+    labourCost: labourCost,
+    DiscountedlabourCost: DiscountedlabourCost,
+    isActive: isActive,
     isProductPopular: isProductPopular,
     isProductNew: isProductNew,
-    isActive: isActive,
   };
 
   try {
@@ -64,6 +82,7 @@ const addProduct = async (req, res, next) => {
     }
   }
 };
+
 
 // Get All Products
 const getAllProducts = async (req, res) => {
@@ -202,6 +221,7 @@ const updateProduct = async (req, res) => {
     return res.send({ error: error.message });
   }
 };
+
 
 // Delete Product
 const deleteProduct = async (req, res) => {
