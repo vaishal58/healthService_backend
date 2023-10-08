@@ -8,7 +8,7 @@ const { getGallaryItems, getAllIncDel, addNewImageInGallary, getGallaryItemById,
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/gallery/");
+    cb(null, "uploads/Gallery/");
   },
   filename: (req, file, cb) => {
     const originalFileName = file.originalname;
