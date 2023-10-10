@@ -240,10 +240,36 @@ const deleteProduct = async (req, res) => {
   }
 };
 
+// Get Products by CategoryId
+const getProductsByCategoryId = async (req, res) => {
+  const categoryId = req.params.id;
+
+  try {
+    const products = await Product.find({ category: categoryId }).exec();
+
+    if (!products || products.length === 0) {
+      return res.send({
+        success: false,
+        message: "No products found for the specified category.",
+      });
+    }
+
+    return res.send({ success: true, products });
+  } catch (error) {
+    console.error("Error fetching products by category:", error);
+    return res.send({
+      success: false,
+      error: "Failed to fetch products by category.",
+    });
+  }
+};
+
+
 module.exports = {
   getAllProducts,
   getSpecificProduct,
   updateProduct,
   deleteProduct,
   addProduct,
+  getProductsByCategoryId,
 };

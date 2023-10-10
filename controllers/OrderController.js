@@ -1,5 +1,7 @@
-const Order = require('../models/Order');
+const Order = require("../models/Order");
 const Customer = require("../models/Customer");
+const Product = require("../models/Products");
+const GST = require("../models/Gst");
 
 exports.getOrders = async (req, res, next) => {
   try {
@@ -36,15 +38,15 @@ exports.createOrder = async (req, res, next) => {
   try {
     const newOrder = await Order.create({
       customer: customer,
-      FirstName : FirstName,
-      LastName : LastName,
+      FirstName: FirstName,
+      LastName: LastName,
       products: products,
       status: status,
       totalAmount: totalAmount,
-      country : country,
-      state : state,
-      city : city,
-      postCode : postCode,
+      country: country,
+      state: state,
+      city: city,
+      postCode: postCode,
       shippingAddress: shippingAddress,
       paymentMethod: paymentMethod,
       // couponCode: couponCode,
@@ -53,7 +55,7 @@ exports.createOrder = async (req, res, next) => {
 
     return res.send({
       success: true,
-      message: 'Order created successfully',
+      message: "Order created successfully",
       order: newOrder,
     });
   } catch (error) {
@@ -61,20 +63,46 @@ exports.createOrder = async (req, res, next) => {
   }
 };
 
+// Make sure to use the correct path to your Product model
+
 exports.getOrderById = async (req, res) => {
-    try {
-      const orderId = req.params.id;
-      const order = await Order.findById(orderId);
-  
-      if (!order) {
-        return res.send({ error: 'Order not found' });
-      } else {
-        res.send({ success: true, order });
-      }
-    } catch (error) {
-      return res.send({ error: error.message });
+  try {
+    const orderId = req.params.id;
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      return res.status(404).json({ error: "Order not found" });
     }
-  };
+
+    // Fetch details of each product in the order
+    const products = await Promise.all(
+      order.products.map(async (product) => {
+        const productDetails = await Product.findById(product.product);
+        const gstDetails = await GST.findById(productDetails.gst);
+
+        // You can include other details if needed
+        return {
+          product: {
+            ...productDetails._doc,
+            gst: gstDetails ? gstDetails.gst : null,
+          },
+          quantity: product.quantity,
+          // Include other details if needed
+        };
+      })
+    );
+
+    // Combine the order details with product details
+    const orderWithProductDetails = {
+      order,
+      products,
+    };
+
+    return res.send({ success: true, orderWithProductDetails });
+  } catch (error) {
+    return res.send({ error: error.message });
+  }
+};
 
 exports.updateOrder = async (req, res, next) => {
   const orderId = req.params.id;
@@ -89,12 +117,12 @@ exports.updateOrder = async (req, res, next) => {
     });
 
     if (!updatedOrder) {
-      return res.send({ error: 'Order not found' });
+      return res.send({ error: "Order not found" });
     }
 
     return res.send({
       success: true,
-      message: 'Order updated successfully',
+      message: "Order updated successfully",
       order: updatedOrder,
     });
   } catch (error) {
@@ -109,10 +137,10 @@ exports.deleteOrder = async (req, res, next) => {
     const deletedOrder = await Order.findByIdAndRemove(orderId);
 
     if (!deletedOrder) {
-      return res.send({ error: 'Order not found' });
+      return res.send({ error: "Order not found" });
     }
 
-    return res.send({ success: true, message: 'Order deleted successfully' });
+    return res.send({ success: true, message: "Order deleted successfully" });
   } catch (error) {
     return res.send({ success: false, error: error.message });
   }

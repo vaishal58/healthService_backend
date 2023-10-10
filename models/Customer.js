@@ -14,7 +14,7 @@ const customerSchema = new mongoose.Schema({
       "Please enter a valid email",
     ],
   },
-  address: String,
+  address: [{type : String}],
   phone: String,
   password: {
     type: String,
