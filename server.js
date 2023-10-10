@@ -77,8 +77,6 @@ const customFormat = ":method :url :color-status :response-time ms";
 app.use(morgan(customFormat));
 // ----------------------------------Define a custom morgan format ----------------------------------------
 
-
-
 app.use(cors());
 app.use("/uploads", express.static("./uploads"));
 app.use("/gallery-images", express.static("./uploads/Gallery"));

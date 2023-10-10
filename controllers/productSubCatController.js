@@ -25,8 +25,23 @@ exports.addSubCategory = async (req, res, next) => {
 // Get all sub-categories
 exports.getAllSubCategories = async (req, res) => {
   try {
+    const subCategoriesWithCategory = await SubCategory.aggregate([
+      {
+        '$lookup': {
+          'from': 'categories', 
+          'localField': 'Category', 
+          'foreignField': '_id', 
+          'as': 'category_data'
+        }
+      }, {
+        '$unwind': {
+          'path': '$category_data'
+        }
+      }
+    ]);
+
     const subCategories = await SubCategory.find({ isDeleted: false });
-    return res.send(subCategories);
+    return res.send(subCategoriesWithCategory);
   } catch (err) {
     return res.send({ error: 'Server error' });
   }
