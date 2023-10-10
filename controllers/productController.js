@@ -11,33 +11,34 @@ const addProduct = async (req, res, next) => {
     category,
     subCategory,
     subSubCategory,
-    Tags,
+    tags,
     original,
     discounted,
     stock,
-    material,
     color,
-    season,
     gst,
     sku,
     calculationOnWeight,
     weightType,
     weight,
-    labourCost,
-    DiscountedlabourCost,
+    laborCost,
+    discountOnLaborCost,
     isActive,
     isProductPopular,
     isProductNew,
+    filters,
+    material,
+    season,
   } = req.body;
 
   const imageGalleryFiles = req.files;
 
-  if (!imageGalleryFiles || imageGalleryFiles.length === 0) {
-    return res.status(400).send({
-      success: false,
-      error: "Main image and image gallery files are required.",
-    });
-  }
+  // if (!imageGalleryFiles || imageGalleryFiles.length === 0) {
+  //   return res.status(400).send({
+  //     success: false,
+  //     error: "Main image and image gallery files are required.",
+  //   });
+  // }
 
   const imageGallery = imageGalleryFiles.map((file) => file.filename);
 
@@ -47,23 +48,24 @@ const addProduct = async (req, res, next) => {
     category: category,
     subCategory: subCategory,
     subSubCategory: subSubCategory,
-    Tags: Tags,
+    tags: tags,
     prices: { original: original, discounted: discounted },
     imageGallery: imageGallery,
     stock: { quantity: stock },
-    material: material,
-    color: color,
-    season: season,
     gst: gst,
     sku: sku,
     calculationOnWeight: calculationOnWeight,
     weightType: weightType,
     weight: weight,
-    labourCost: labourCost,
-    DiscountedlabourCost: DiscountedlabourCost,
+    laborCost: laborCost,
+    discountOnLaborCost: discountOnLaborCost ? discountOnLaborCost : null,
     isActive: isActive,
     isProductPopular: isProductPopular,
     isProductNew: isProductNew,
+    filters: filters,
+    color: color,
+    material: material,
+    season: season,
   };
 
   try {
@@ -78,11 +80,10 @@ const addProduct = async (req, res, next) => {
     if (error.code === 11000) {
       res.send({ success: false, error: "Duplicate SKU" });
     } else {
-      res.send({ success: false, error: "Internal Server Error" });
+      res.status(500).send({ success: false, error: "Internal Server Error" });
     }
   }
 };
-
 
 // Get All Products
 const getAllProducts = async (req, res) => {
@@ -139,7 +140,6 @@ const getSpecificProduct = async (req, res) => {
 //       isProductNew,
 //       isActive,
 //     } = req.body;
-  
 
 //     if (req.files && req.files.length > 0) {
 //       req.files.forEach((file) => {
@@ -183,45 +183,44 @@ const updateProduct = async (req, res) => {
     const productToUpdate = await Product.findById(Id);
 
     if (!productToUpdate) {
-      return res.send({ error: 'SubSubCategory not found' });
+      return res.send({ error: "SubSubCategory not found" });
     }
-         const productData = {
-       name: req.body.name,
-       description: req.body.description,
-       category: req.body.category,
-       subCategory: req.body.subCategory,
-       subSubCategory: req.body.subSubCategory ? req.body.subSubCategory : null,
-       prices: { original: req.body.original, discounted: req.body.discounted },
-       imageGallery: req.body.imageGallery,
-       stock: { quantity: req.body.stock },
-       sku: req.body.sku,
-       gst: req.body.gst,
-       isProductPopular: req.body.isProductPopular,
-       isProductNew: req.body.isProductNew,
-       isActive: req.body.isActive,
-     };
+    const productData = {
+      name: req.body.name,
+      description: req.body.description,
+      category: req.body.category,
+      subCategory: req.body.subCategory,
+      subSubCategory: req.body.subSubCategory ? req.body.subSubCategory : null,
+      prices: { original: req.body.original, discounted: req.body.discounted },
+      imageGallery: req.body.imageGallery,
+      stock: { quantity: req.body.stock },
+      sku: req.body.sku,
+      gst: req.body.gst,
+      isProductPopular: req.body.isProductPopular,
+      isProductNew: req.body.isProductNew,
+      isActive: req.body.isActive,
+    };
 
-     const addedImages = imageGalleryFiles.map((file) => file.filename);
+    const addedImages = imageGalleryFiles.map((file) => file.filename);
 
-     if (addedImages.length > 0) {
+    if (addedImages.length > 0) {
       productData.imageGallery = productData.imageGallery.concat(addedImages);
     }
 
-    console.log(addedImages)
+    console.log(addedImages);
 
     await Product.findByIdAndUpdate(Id, productData);
     const UpdatedProduct = await Product.findById(Id);
 
     res.send({
       success: true,
-      msg: 'SubSubCategory updated successfully',
+      msg: "SubSubCategory updated successfully",
       data: UpdatedProduct,
     });
   } catch (error) {
     return res.send({ error: error.message });
   }
 };
-
 
 // Delete Product
 const deleteProduct = async (req, res) => {
