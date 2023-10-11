@@ -8,6 +8,8 @@ const crypto = require("crypto");
 const sendEmail = require("../utils/sendEmail");
 const Product = require("../models/Products");
 const gstModel = require('../models/Gst');
+const PriceUpdate = require("../models/PriceUpdate");
+
 
 
 const app = express();
@@ -452,7 +454,6 @@ const getLoggedInCustomerCartItems = async (req, res) => {
       product: item.product,
       quantity: item.quantity,
       tax:item.tax,
-      totalTax:item.totalTax
       // Add other product details if needed
     }));
 

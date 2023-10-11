@@ -1,6 +1,7 @@
 const express = require("express");
 const Product = require("../models/Products");
 const Category = require("../models/ProductCat");
+const PriceUpdate = require("../models/PriceUpdate");
 
 // Create Product
 
@@ -42,6 +43,17 @@ const addProduct = async (req, res, next) => {
 
   const imageGallery = imageGalleryFiles.map((file) => file.filename);
 
+  let calculatedPrice = 0;
+
+  console.log(calculationOnWeight);
+
+  if (calculationOnWeight === "true") {
+    const priceUpdate = await PriceUpdate.findById(weightType);
+    calculatedPrice = priceUpdate.price * weight + weight * discountOnLaborCost; 
+  } else {
+    calculatedPrice = original ;
+  }
+
   const productData = {
     name: name,
     description: description,
@@ -49,7 +61,11 @@ const addProduct = async (req, res, next) => {
     subCategory: subCategory,
     subSubCategory: subSubCategory,
     tags: tags,
-    prices: { original: original, discounted: discounted },
+    prices: {
+      original: original,
+      discounted: discounted,
+      calculatedPrice: calculatedPrice,
+    },
     imageGallery: imageGallery,
     stock: { quantity: stock },
     gst: gst,
@@ -98,14 +114,31 @@ const getAllProducts = async (req, res) => {
 // Get Specific Product
 const getSpecificProduct = async (req, res) => {
   const productId = req.params.id;
+
   try {
     const product = await Product.findById(productId);
+
     if (!product) {
       return res.send({ success: false, message: "Product not found." });
     }
-    return res.send({ success: true, product });
+
+    if (product.weightType) {
+      // Only proceed if weightType is not null
+      const priceUpdate = await PriceUpdate.findById(product.weightType);
+
+      if (!priceUpdate) {
+        return res.send({ success: false, message: "Price update not found." });
+      }
+
+      const price = priceUpdate.price;
+
+      return res.send({ success: true, product, price });
+    } else {
+      // Handle the case where weightType is null
+      return res.send({ success: true, product, price: null });
+    }
   } catch (error) {
-    return res.send({ success: fale, error: "Failed to fetch the product." });
+    return res.send({ success: false, error: "Failed to fetch the product." });
   }
 };
 
@@ -262,7 +295,6 @@ const getProductsByCategoryId = async (req, res) => {
     });
   }
 };
-
 
 module.exports = {
   getAllProducts,
