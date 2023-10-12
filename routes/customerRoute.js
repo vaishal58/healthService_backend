@@ -1,6 +1,6 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
-const { registerCustomer, loginCustomer, getCustomers, getLoggedInCustomer, logoutCustomer, getSpecificCustomer, loginStatus, updateCustomerPassword, forgotCustomerPassword, resetCustomerPassword, updateCustomer, DeleteCustomer, addToCart, removeFromCart, getLoggedInCustomerCartItems, removeAllFromCart, updateCartItem, addToWishlist } = require("../controllers/customerController");
+const { registerCustomer, loginCustomer, getCustomers, getLoggedInCustomer, logoutCustomer, getSpecificCustomer, loginStatus, updateCustomerPassword, forgotCustomerPassword, resetCustomerPassword, updateCustomer, DeleteCustomer, addToCart, removeFromCart, getLoggedInCustomerCartItems, removeAllFromCart, updateCartItem, addToWishlist, getLoggedInCustomerWishlistItems, removeFromWishlist } = require("../controllers/customerController");
 const protect = require("../middlewares/authMiddleware");
 const router = express.Router();
 
@@ -24,6 +24,8 @@ router.post("/removefromcart/:id" , removeFromCart);
 router.post("/removeallfromcart/:id" , removeAllFromCart);
 router.post("/updatecart/:id" , updateCartItem);
 router.post("/createwishlist/:id" , addToWishlist);
+router.post("/getcustomerwishlist/:id" , getLoggedInCustomerWishlistItems);
+router.post("/removefromwishlist/:id" , removeFromWishlist);
 
 
 module.exports = router;

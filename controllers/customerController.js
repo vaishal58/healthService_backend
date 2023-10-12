@@ -8,6 +8,8 @@ const crypto = require("crypto");
 const sendEmail = require("../utils/sendEmail");
 const Product = require("../models/Products");
 const gstModel = require('../models/Gst');
+const PriceUpdate = require("../models/PriceUpdate");
+
 
 
 const app = express();
@@ -180,29 +182,31 @@ const updateCustomer = async (req, res) => {
   try {
     const CustomerId = req.params.id;
     console.log(CustomerId);
-    const customer = await Customer.findById(CustomerId);
-    if (!customer) {
-      return res.send({ error: "Id not found" });
-    }
-    const updateData = {
-      username: req.body.username,
-      email: req.body.email,
-      address: req.body.address,
-      phone: req.body.phone,
-      orderHistory: req.body.orderHistory,
-      paymentMethods: req.body.paymentMethods,
-      active: req.body.active,
-      deleted: req.body.deleted,
-      updatedAt: Date.now(),
-      
-    };
+    const { username, email, address, phone, active } = req.body;
+  
+    const updateData = await Customer.findByIdAndUpdate(
+      CustomerId,
+    {
+      username,
+      email,
+      address,
+      phone,
+      active,
+    },
+    {new : true}
+    );
 
-    await Customer.findByIdAndUpdate(CustomerId, updateData);
-    const updatedRecord = await Customer.findById(CustomerId);
-    res.send({
+    if (!updateData) {
+      return res.send({
+        success: false,
+        message: "Customer not found",
+      });
+    }
+
+    return res.send({
       success: true,
-      msg: "Customer updated successfully",
-      updatedRecord,
+      message: "Customer updated successfully",
+      customer: updateData,
     });
   } catch (error) {
     return res.send({ error: error.message });
@@ -450,7 +454,6 @@ const getLoggedInCustomerCartItems = async (req, res) => {
       product: item.product,
       quantity: item.quantity,
       tax:item.tax,
-      totalTax:item.totalTax
       // Add other product details if needed
     }));
 
@@ -471,8 +474,8 @@ const getLoggedInCustomerCartItems = async (req, res) => {
 const removeFromCart = async (req, res) => {
   const customerId = req.params.id; // Customer ID
   const { productId } = req.body; // Product ID
-  console.log(req.body);
-  console.log(req.params.id);
+  // console.log(req.body);
+  // console.log(req.params.id);
 
   try {
     // Find the customer by ID
@@ -626,6 +629,15 @@ const addToWishlist = async (req, res) => {
 
     if (!existingWishlistItem) {
       // If the product does not exist in the wishlist, add it
+      const product = await Product.findById(productId);
+
+      if (!product) {
+        return res.status(404).json({
+          success: false,
+          msg: "Product not found",
+        });
+      }
+      
       customer.wishlist.push(productId);
       await customer.save();
 
@@ -650,6 +662,94 @@ const addToWishlist = async (req, res) => {
   }
 };
 
+// Get LoggedIn customer Wishlist Item
+const getLoggedInCustomerWishlistItems = async (req, res) => {
+  const customerId = req.params.id; // Customer ID
+
+  try {
+    // Find the customer by ID and populate the cartItems field with product details
+    const customer = await Customer.findById(customerId).populate(
+      "wishlist"
+    );
+
+    if (!customer) {
+      return res.status(404).json({
+        success: false,
+        msg: "Customer not found",
+      });
+    }
+
+    // Extract relevant cart information with complete product details
+    const wishlistItems = customer.wishlist.map((item) => ({
+      product: item,
+      // Add other product details if needed
+    }));
+
+    return res.send({
+      success: true,
+      wishlistItems,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.send({
+      success: false,
+      msg: "Internal Server Error",
+    });
+  }
+};
+
+// Remove a product from the customer's wishlist
+const removeFromWishlist = async (req, res) => {
+  const customerId = req.params.id; // Customer ID
+  const { productId } = req.body; // Product ID
+  // console.log(req.body);
+  // console.log(req.params.id);
+
+  try {
+    // Find the customer by ID
+    const customer = await Customer.findById(customerId);
+
+    if (!customer) {
+      return res.status(404).json({
+        success: false,
+        msg: "Customer not found",
+      });
+    }
+
+    // Check if the product exists in the cart
+    const wishlistItemIndex = customer.wishlist.findIndex(
+      (item) => item.toString() === productId
+    );
+
+    // if (cartItemIndex === -1) {
+    //   return res.send({
+    //     success: false,
+    //     msg: "Product not found in the cart",
+    //   });
+    // }
+
+    // Remove the product from the cart
+    customer.wishlist.splice(wishlistItemIndex, 1);
+
+    // Save the updated cart
+    await customer.save();
+
+    return res.send({
+      success: true,
+      msg: "Product removed from the cart successfully",
+      updatedCart: customer,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      msg: "Internal Server Error",
+    });
+  }
+};
+
+
+
 module.exports = {
   registerCustomer,
   loginCustomer,
@@ -669,4 +769,6 @@ module.exports = {
   removeAllFromCart,
   updateCartItem,
   addToWishlist,
+  getLoggedInCustomerWishlistItems,
+  removeFromWishlist,
 };

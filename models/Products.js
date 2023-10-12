@@ -14,6 +14,7 @@ const productSchema = new mongoose.Schema({
   prices: {
     original: { type: Number },
     discounted: { type: Number },
+    calculatedPrice: { type: Number },
   },
   imageGallery: { type: Array },
   stock: {
@@ -40,6 +41,7 @@ const productSchema = new mongoose.Schema({
   color: { type: String },
   material: { type: String },
   season: { type: String },
+
 });
 
 const Product = mongoose.model("Product", productSchema);

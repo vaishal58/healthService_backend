@@ -1,6 +1,7 @@
 const express = require("express");
 const Product = require("../models/Products");
 const Category = require("../models/ProductCat");
+const PriceUpdate = require("../models/PriceUpdate");
 
 // Create Product
 
@@ -42,6 +43,17 @@ const addProduct = async (req, res, next) => {
 
   const imageGallery = imageGalleryFiles.map((file) => file.filename);
 
+  let calculatedPrice = 0;
+
+  console.log(calculationOnWeight);
+
+  if (calculationOnWeight === "true") {
+    const priceUpdate = await PriceUpdate.findById(weightType);
+    calculatedPrice = priceUpdate.price * weight + weight * discountOnLaborCost;
+  } else {
+    calculatedPrice = original;
+  }
+
   const productData = {
     name: name,
     description: description,
@@ -49,7 +61,11 @@ const addProduct = async (req, res, next) => {
     subCategory: subCategory,
     subSubCategory: subSubCategory,
     tags: tags,
-    prices: { original: original, discounted: discounted },
+    prices: {
+      original: original,
+      discounted: discounted,
+      calculatedPrice: calculatedPrice,
+    },
     imageGallery: imageGallery,
     stock: { quantity: stock },
     gst: gst,
@@ -239,10 +255,35 @@ const deleteProduct = async (req, res) => {
   }
 };
 
+// Get Products by CategoryId
+const getProductsByCategoryId = async (req, res) => {
+  const categoryId = req.params.id;
+
+  try {
+    const products = await Product.find({ category: categoryId }).exec();
+
+    if (!products || products.length === 0) {
+      return res.send({
+        success: false,
+        message: "No products found for the specified category.",
+      });
+    }
+
+    return res.send({ success: true, products });
+  } catch (error) {
+    console.error("Error fetching products by category:", error);
+    return res.send({
+      success: false,
+      error: "Failed to fetch products by category.",
+    });
+  }
+};
+
 module.exports = {
   getAllProducts,
   getSpecificProduct,
   updateProduct,
   deleteProduct,
   addProduct,
+  getProductsByCategoryId,
 };

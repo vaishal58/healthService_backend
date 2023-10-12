@@ -116,7 +116,7 @@ app.use("/banner" , BannerRoutes);
 
 // Error Middleware
 // app.use(errorHandler);
-app.use(protect);
+// app.use(protect);
 
 // ROUTES
 app.get("/", (req, res) => {
