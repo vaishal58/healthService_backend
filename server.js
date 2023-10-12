@@ -31,6 +31,7 @@ const ColorRoutes = require("./routes/ColorRoutes");
 const SeasonRoutes = require("./routes/SeasonRoutes");
 const Gst = require("./routes/gstRoutes");
 const DailyRatesRoutes = require("./routes/PricetypeRoutes");
+const BannerRoutes = require("./routes/BannerRoutes");
 
 
 
@@ -103,6 +104,7 @@ app.use("/dailyrates" , DailyRatesRoutes);
 app.use("/material" , MaterialRoutes);
 app.use("/color" , ColorRoutes);
 app.use("/season" , SeasonRoutes);
+app.use("/banner" , BannerRoutes);
 
 
 
