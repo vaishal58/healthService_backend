@@ -49,9 +49,9 @@ const addProduct = async (req, res, next) => {
 
   if (calculationOnWeight === "true") {
     const priceUpdate = await PriceUpdate.findById(weightType);
-    calculatedPrice = priceUpdate.price * weight + weight * discountOnLaborCost; 
+    calculatedPrice = priceUpdate.price * weight + weight * discountOnLaborCost;
   } else {
-    calculatedPrice = original ;
+    calculatedPrice = original;
   }
 
   const productData = {
@@ -114,29 +114,12 @@ const getAllProducts = async (req, res) => {
 // Get Specific Product
 const getSpecificProduct = async (req, res) => {
   const productId = req.params.id;
-
   try {
     const product = await Product.findById(productId);
-
     if (!product) {
       return res.send({ success: false, message: "Product not found." });
     }
-
-    if (product.weightType) {
-      // Only proceed if weightType is not null
-      const priceUpdate = await PriceUpdate.findById(product.weightType);
-
-      if (!priceUpdate) {
-        return res.send({ success: false, message: "Price update not found." });
-      }
-
-      const price = priceUpdate.price;
-
-      return res.send({ success: true, product, price });
-    } else {
-      // Handle the case where weightType is null
-      return res.send({ success: true, product, price: null });
-    }
+    return res.send({ success: true, product });
   } catch (error) {
     return res.send({ success: false, error: "Failed to fetch the product." });
   }

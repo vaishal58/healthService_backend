@@ -114,7 +114,7 @@ app.use("/season" , SeasonRoutes);
 
 // Error Middleware
 // app.use(errorHandler);
-app.use(protect);
+// app.use(protect);
 
 // ROUTES
 app.get("/", (req, res) => {
