@@ -105,7 +105,7 @@ const getSpecificProduct = async (req, res) => {
     }
     return res.send({ success: true, product });
   } catch (error) {
-    return res.send({ success: fale, error: "Failed to fetch the product." });
+    return res.send({ success: false, error: "Failed to fetch the product." });
   }
 };
 
