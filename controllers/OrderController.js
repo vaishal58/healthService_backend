@@ -2,6 +2,7 @@ const Order = require("../models/Order");
 const Customer = require("../models/Customer");
 const Product = require("../models/Products");
 const GST = require("../models/Gst");
+const Stock = require("../models/Stock");
 
 exports.getOrders = async (req, res, next) => {
   try {
@@ -33,9 +34,39 @@ exports.createOrder = async (req, res, next) => {
     giftVoucher,
   } = req.body;
 
-  console.log(req.body);
-
   try {
+    products.forEach((element) => {
+      Stock.find({
+        $and: [
+          { ProductId: element.product },
+          { quantity: { $gt: 0 } }
+        ]
+      }).then((filteredStock) => {
+        const itemWithOldestDate = filteredStock.reduce(
+          (oldestItem, currentItem) => {
+            if (
+              !oldestItem ||
+              currentItem.date.getTime() < oldestItem.date.getTime()
+            ) {
+              return currentItem;
+            }
+            return oldestItem;
+          },
+          null
+        );
+
+        console.log(itemWithOldestDate);
+        console.log(itemWithOldestDate.quantity - element.quantity);
+        const updatedQuantity = itemWithOldestDate.quantity - element.quantity;
+        Stock.findByIdAndUpdate(itemWithOldestDate._id, {
+          quantity: updatedQuantity,
+        }).then((filteredStock) => {
+
+          console.log(filteredStock)
+        });
+      });
+    });
+
     const newOrder = await Order.create({
       customer: customer,
       FirstName: FirstName,
