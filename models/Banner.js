@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const bannerSchema = new mongoose.Schema({
-  name: { type: String },
+  bannerTitle: { type: String },
   image: { type: String },
   description: { type: String },
   bannerType: { type: String },

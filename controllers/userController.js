@@ -76,7 +76,7 @@ const loginUser = asyncHandler(async (req, res) => {
       roles: roles,
     });
   } else {
-    return res.status(400).send({ success: false, msg: "Invalid Credentials" });
+    return res.status(401).send({ success: false, msg: "Invalid Credentials" });
   }
 });
 
