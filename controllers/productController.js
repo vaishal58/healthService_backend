@@ -2,6 +2,9 @@ const express = require("express");
 const Product = require("../models/Products");
 const Category = require("../models/ProductCat");
 const PriceUpdate = require("../models/PriceUpdate");
+const Color = require("../models/Color");
+const Material = require("../models/Material");
+const Season = require("../models/Season");
 
 // Create Product
 
