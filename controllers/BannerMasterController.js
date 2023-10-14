@@ -75,20 +75,29 @@ exports.updateBanner = async (req, res, next) => {
 };
 
 exports.deleteBanner = async (req, res, next) => {
-  const banner = await BannerMasterModel.findByIdAndUpdate(
-    req.params.id,
-    {
-      deleted: true,
-      deletedAt: new Date(),
-    },
-    { new: true }
-  );
 
-  if (!banner) {
-    return res.status(404).json({ message: "Banner not found" });
+
+  try {
+    const  bannerId  = req.params.id;
+    const deletedBanner = await BannerMasterModel.findByIdAndDelete(bannerId);
+
+    if (!deletedBanner) {
+      return res.send({
+        success: false,
+        message: "Coupon not found",
+      });
+    }
+
+    return res.send({
+      success: true,
+      message: "Coupon deleted successfully",
+    });
+  } catch (error) {
+    return res.send({
+      success: false,
+      error: error.message,
+    });
   }
-
-  return res.status(204).end();
 };
 
 exports.getAllIncDelBanner = async (req, res, next) => {
