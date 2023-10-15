@@ -32,6 +32,7 @@ const SeasonRoutes = require("./routes/SeasonRoutes");
 const Gst = require("./routes/gstRoutes");
 const DailyRatesRoutes = require("./routes/PricetypeRoutes");
 const BannerRoutes = require("./routes/BannerRoutes");
+const BlogRoutes = require("./routes/blogRouts")
 
 
 
@@ -84,6 +85,7 @@ app.use("/gallery-images", express.static("./uploads/Gallery"));
 app.use("/products", express.static("./uploads/Products"));
 app.use("/cagtegory", express.static("./uploads/Category"));
 app.use("/banner", express.static("./uploads/Banner"));
+app.use("/blog-images", express.static("./uploads/Blog"));
 
 // Routes Middleware
 
@@ -106,7 +108,7 @@ app.use("/material" , MaterialRoutes);
 app.use("/color" , ColorRoutes);
 app.use("/season" , SeasonRoutes);
 app.use("/banner" , BannerRoutes);
-
+app.use("/blog" , BlogRoutes);
 
 
 // app.use("/api" , menuRoutes);
