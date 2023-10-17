@@ -37,6 +37,14 @@ exports.getAllSubCategories = async (req, res) => {
         '$unwind': {
           'path': '$category_data'
         }
+      },{
+        '$project':{
+          '_id':1,
+          'name':1,
+          'isActive': 1, 
+          'Category':1,
+          'CategoryTitle': '$category_data.name'
+        }
       }
     ]);
 
@@ -96,11 +104,7 @@ exports.updateSubCategoryById = async (req, res, next) => {
 exports.deleteSubCategoryById = async (req, res) => {
   try {
     const subCategoryId = req.params.id;
-    const subCategory = await SubCategory.findByIdAndUpdate(
-      subCategoryId,
-      { isDeleted: true },
-      { new: true }
-    );
+    const subCategory = await SubCategory.findByIdAndDelete(subCategoryId);
 
     if (!subCategory) {
       return res.send({ success: false, error: 'SubCategory not found' });

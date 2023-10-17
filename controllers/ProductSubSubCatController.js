@@ -24,8 +24,49 @@ exports.addSubSubCategory = async (req, res, next) => {
 // Get all sub-sub-categories
 exports.getAllSubSubCategories = async (req, res) => {
   try {
-    const subSubCategories = await SubSubCategory.find({ isDeleted: false });
-    return res.send(subSubCategories);
+    // const subSubCategories = await SubSubCategory.find({ isDeleted: false });
+
+    const subSubCategory = await SubSubCategory.aggregate([
+      {
+        '$lookup': {
+          'from': 'categories', 
+          'localField': 'Category', 
+          'foreignField': '_id', 
+          'as': 'CategoryTitle'
+        }
+      }, {
+        '$lookup': {
+          'from': 'subcategories', 
+          'localField': 'SubCategory', 
+          'foreignField': '_id', 
+          'as': 'subCategoryTitle'
+        }
+      }, {
+        '$unwind': {
+          'path': '$CategoryTitle'
+        }
+      }, {
+        '$unwind': {
+          'path': '$subCategoryTitle'
+        }
+      }, {
+        '$project': {
+          '_id': 1, 
+          'name': 1, 
+          'isActive': 1, 
+          'CategoryTitle': '$CategoryTitle.name', 
+          'subCategoryTitle': '$subCategoryTitle.name', 
+          'Category': 1, 
+          'SubCategory': 1,
+          
+          
+        }
+      }
+    ]);
+  
+  // 'subSubCategory' now contains the enriched data.
+  
+    return res.send(subSubCategory);
   } catch (err) {
     return res.send({ error: 'Server error' });
   }
@@ -36,6 +77,8 @@ exports.getSubSubCategoryById = async (req, res) => {
   try {
     const subSubCategoryId = req.params.id;
     const subSubCategory = await SubSubCategory.findById(subSubCategoryId);
+
+    
 
     if (!subSubCategory) {
       return res.send({ error: 'SubSubCategory not found' });
