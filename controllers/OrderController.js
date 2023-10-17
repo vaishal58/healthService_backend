@@ -80,7 +80,7 @@ exports.createOrder = async (req, res, next) => {
       postCode: postCode,
       shippingAddress: shippingAddress,
       paymentMethod: paymentMethod,
-      // couponCode: couponCode,
+      couponCode: couponCode,
       // giftVoucher: giftVoucher,
     });
 
