@@ -35,6 +35,7 @@ const BannerRoutes = require("./routes/BannerRoutes");
 const BlogRoutes = require("./routes/blogRouts")
 
 
+
 // const menuRoutes = require("./routes/menuRoutes");
 
 // DATA IMPORTS
@@ -108,7 +109,6 @@ app.use("/color" , ColorRoutes);
 app.use("/season" , SeasonRoutes);
 app.use("/banner" , BannerRoutes);
 app.use("/blog" , BlogRoutes);
-
 
 
 // app.use("/api" , menuRoutes);

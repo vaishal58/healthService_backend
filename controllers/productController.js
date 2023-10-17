@@ -104,10 +104,80 @@ const addProduct = async (req, res, next) => {
   }
 };
 
+
+const getAllProductsForTable = async (req, res) => {
+  try {
+
+    const products = await Product.aggregate(
+      [
+        {
+            '$lookup': {
+                'from': 'categories', 
+                'localField': 'category', 
+                'foreignField': '_id', 
+                'as': 'category_data'
+            }
+        }, {
+            '$unwind': {
+                'path': '$category_data'
+            }
+        }, {
+            '$project': {
+                '_id': 1, 
+                'categoryTitle': '$category_data.name', 
+                'sku': 1, 
+                'calculationOnWeight': 1, 
+                'prices': 1, 
+                'name': 1, 
+                'laborCost': 1, 
+                'isProductNew': 1, 
+                'weight': 1,
+                'imageGallery':1,
+            }
+        }
+    
+    ])
+
+    
+    return res.send({ success: true, products });
+  } catch (error) {
+    return res.send({ success: false, error: "Failed to fetch products." });
+  }
+};
+
 // Get All Products
 const getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find().exec();
+    const category = req.query.category; 
+    const color = req.query.color;       
+    const material = req.query.material; 
+    const season = req.query.season;
+    // const minPrice = req.query.minPrice; 
+    // const maxPrice = req.query.maxPrice; 
+
+    
+    const filter = {};
+
+    if (category) {
+      filter.category = category;
+    }
+
+    if (color) {
+      filter.color = color;
+    }
+
+    if (material) {
+      filter.material = material;
+    }
+
+    if(season){
+      filter.season = season
+    }
+
+    // Use the filter object in the query to fetch products
+    const products = await Product.find(filter).exec();
+
+    
     return res.send({ success: true, products });
   } catch (error) {
     return res.send({ success: false, error: "Failed to fetch products." });
@@ -127,73 +197,6 @@ const getSpecificProduct = async (req, res) => {
     return res.send({ success: false, error: "Failed to fetch the product." });
   }
 };
-
-// Update Product
-// const updateProduct = async (req, res) => {
-//   console.log("body of req",req.body);
-//   try {
-//     const productId = req.params.id;
-//     if (!productId) {
-//       return res
-//         .status(400)
-//         .send({ success: false, message: "Product ID is required." });
-//     }
-//     const product = await Product.findById(productId);
-//     if (!product) {
-//       return res
-//         .status(404)
-//         .send({ success: false, message: "Product not found." });
-//     }
-//     const {
-//       name,
-//       description,
-//       category,
-//       subCategory,
-//       subSubCategory,
-//       original,
-//       discounted,
-//       stock,
-//       sku,
-//       gst,
-//       isProductPopular,
-//       isProductNew,
-//       isActive,
-//     } = req.body;
-
-//     if (req.files && req.files.length > 0) {
-//       req.files.forEach((file) => {
-//         imageGallery.push(file.path);
-//       });
-//     }
-
-//     const productData = {
-//       name: name,
-//       description: description,
-//       category: category,
-//       subCategory: subCategory,
-//       subSubCategory: subSubCategory ? subSubCategory : null,
-//       prices: { original: original, discounted: discounted },
-//       imageGallery: imageGallery,
-//       stock: { quantity: stock },
-//       sku: sku,
-//       gst: gst,
-
-//       isProductPopular: isProductPopular,
-//       isProductNew: isProductNew,
-//       isActive: isActive,
-//     };
-
-//     await Product.findByIdAndUpdate(productId, productData);
-
-//     return res.send({
-//       success: true,
-//       message: "Product updated successfully.",
-//     });
-//   } catch (error) {
-//     console.error("Update Error:", error);
-//     res.send({ success: false, error: "Internal Server Error" });
-//   }
-// };
 
 const updateProduct = async (req, res) => {
   try {
@@ -289,4 +292,5 @@ module.exports = {
   deleteProduct,
   addProduct,
   getProductsByCategoryId,
+  getAllProductsForTable,
 };
