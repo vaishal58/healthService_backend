@@ -5,12 +5,12 @@ exports.getBanner = async (req, res, next) => {
   if (recordExists.length === 0) {
     return res.status(204).end();
   }
-  return res.status(200).json({ data: recordExists });
+  return res.status(200).json({ success: true, data: recordExists });
 };
 
 exports.addNewBanner = async (req, res, next) => {
-    console.log(req.body)
-    console.log(req.file)
+  console.log(req.body);
+  console.log(req.file);
   const body = {
     bannerTitle: req.body.bannerTitle,
     bannerType: req.body.bannerType,
@@ -75,10 +75,8 @@ exports.updateBanner = async (req, res, next) => {
 };
 
 exports.deleteBanner = async (req, res, next) => {
-
-
   try {
-    const  bannerId  = req.params.id;
+    const bannerId = req.params.id;
     const deletedBanner = await BannerMasterModel.findByIdAndDelete(bannerId);
 
     if (!deletedBanner) {
