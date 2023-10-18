@@ -9,16 +9,12 @@ const cookieParser = require("cookie-parser");
 const protect = require("./middlewares/authMiddleware");
 const helmet = require("helmet");
 const morgan = require("morgan");
-// const generelRoutes = require("./routes/generelRoutes");
-// const clientRoutes = require("./routes/clientRoutes");
-// const salesRoutes = require("./routes/salesRoutes");
-// const managementRoutes = require("./routes/managementRoutes");
+
 const roleRoutes = require("./routes/roleRoute");
 const productRoutes = require("./routes/ProductRoutes");
 const productCatRoutes = require("./routes/productCatRoute");
 const productSubCatRoutes = require("./routes/ProductSubCatRoutes");
 const productSubSubCatRoutes = require("./routes/ProductSubSubCatRoutes");
-// const Products = require("./routes/ProductRoute");
 const customerRoutes = require("./routes/customerRoute");
 const orderRoutes = require("./routes/OrderRoutes");
 const contentRoutes = require("./routes/contentRoutes");
@@ -33,6 +29,7 @@ const Gst = require("./routes/gstRoutes");
 const DailyRatesRoutes = require("./routes/PricetypeRoutes");
 const BannerRoutes = require("./routes/BannerRoutes");
 const BlogRoutes = require("./routes/blogRouts")
+const DashboardRoutes = require("./routes/dashboardRouts")
 
 
 
@@ -44,7 +41,7 @@ const User = require("./models/User");
 // MIDDLEWARES
 connectToMongo();
 const app = express();
-const port = 5000;
+const port = 5002;
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
@@ -109,6 +106,7 @@ app.use("/color" , ColorRoutes);
 app.use("/season" , SeasonRoutes);
 app.use("/banner" , BannerRoutes);
 app.use("/blog" , BlogRoutes);
+app.use("/dashboard" , DashboardRoutes);
 
 
 // app.use("/api" , menuRoutes);
