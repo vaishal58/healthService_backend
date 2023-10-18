@@ -1,6 +1,6 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
-const { registerCustomer, loginCustomer, getCustomers, getLoggedInCustomer, logoutCustomer, getSpecificCustomer, loginStatus, updateCustomerPassword, forgotCustomerPassword, resetCustomerPassword, updateCustomer, DeleteCustomer, addToCart, removeFromCart, getLoggedInCustomerCartItems, removeAllFromCart, updateCartItem, addToWishlist, getLoggedInCustomerWishlistItems, removeFromWishlist } = require("../controllers/customerController");
+const { registerCustomer, loginCustomer, getCustomers, getLoggedInCustomer, logoutCustomer, getSpecificCustomer, loginStatus, updateCustomerPassword, forgotCustomerPassword, resetCustomerPassword, updateCustomer, DeleteCustomer, addToCart, removeFromCart, getLoggedInCustomerCartItems, removeAllFromCart, updateCartItem, addToWishlist, getLoggedInCustomerWishlistItems, removeFromWishlist, getTotalActiveUsers } = require("../controllers/customerController");
 const protect = require("../middlewares/authMiddleware");
 const router = express.Router();
 
