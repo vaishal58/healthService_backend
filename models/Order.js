@@ -6,11 +6,11 @@ const orderSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Customer",
   },
-  FirstName : {
-  type: String,
+  FirstName: {
+    type: String,
   },
-  LastName : {
-  type: String,
+  LastName: {
+    type: String,
   },
   products: [
     {
@@ -25,7 +25,7 @@ const orderSchema = new mongoose.Schema({
   ],
   status: {
     type: String,
-    enum: ["pending", "processing", "completed", "cancelled" , "return"],
+    enum: ["pending", "processing", "completed", "cancelled", "return"],
     default: "pending",
   },
   totalAmount: {
@@ -37,11 +37,18 @@ const orderSchema = new mongoose.Schema({
   shippingAddress: {
     type: String,
   },
-  country : {
-    type : String,
-    enum : [
-      "India",
-    ]
+  country: {
+    type: String,
+    enum: ["India"],
+  },
+  isInvoiceGenrated: {
+    type: Boolean,
+  },
+  invoiceNumber: {
+    type: String,
+  },
+  invoiceGenrationDate: {
+    type: Date,
   },
   state: {
     type: String,
@@ -79,14 +86,14 @@ const orderSchema = new mongoose.Schema({
       "Dadra and Nagar Haveli and Daman and Diu",
       "Lakshadweep",
       "Delhi",
-      "Puducherry"
+      "Puducherry",
     ],
-  }, 
-  city : {
-    type : String,
   },
-  postCode : {
-    type : String,
+  city: {
+    type: String,
+  },
+  postCode: {
+    type: String,
   },
   paymentMethod: {
     type: String,
