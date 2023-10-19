@@ -126,6 +126,8 @@ const getCustomers = async (req, res) => {
   }
 };
 
+
+
 // Get LoggedIn Customer
 const getLoggedInCustomer = async (req, res) => {
   let customerId = req.body.id;
@@ -395,12 +397,11 @@ const addToCart = async (req, res) => {
     );
 
     if (existingCartItem) {
-      // If the product already exists in the cart, update the quantity
       existingCartItem.quantity += parseInt(quantity);
     } else {
-      // If the product does not exist in the cart, add it as a new item
-      const product = await Product.findById(productId); // Replace 'Product' with your actual model name
-      const GST = await gstModel.findById(product.gst); // Replace 'Product' with your actual model name
+      
+      const product = await Product.findById(productId); 
+      const GST = await gstModel.findById(product.gst); 
 
       if (!product) {
         return res.status(404).json({
@@ -747,6 +748,8 @@ const removeFromWishlist = async (req, res) => {
     });
   }
 };
+
+
 
 
 
