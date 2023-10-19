@@ -57,8 +57,7 @@ exports.createOrder = async (req, res, next) => {
           },
           null
         );
-
-       
+      
         const updatedQuantity = itemWithOldestDate.quantity - element.quantity;
         Stock.findByIdAndUpdate(itemWithOldestDate._id, {
           quantity: updatedQuantity,
