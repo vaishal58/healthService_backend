@@ -3,6 +3,7 @@ const Customer = require("../models/Customer");
 const Product = require("../models/Products");
 const GST = require("../models/Gst");
 const Stock = require("../models/Stock");
+const lattestInvoiceModel = require("../models/lattestInvoice");
 
 exports.getOrders = async (req, res, next) => {
   try {
@@ -15,6 +16,8 @@ exports.getOrders = async (req, res, next) => {
     return res.send({ error: error.message });
   }
 };
+
+
 
 exports.createOrder = async (req, res, next) => {
   const {
@@ -54,18 +57,24 @@ exports.createOrder = async (req, res, next) => {
           },
           null
         );
-
-        console.log(itemWithOldestDate);
-        console.log(itemWithOldestDate.quantity - element.quantity);
+      
         const updatedQuantity = itemWithOldestDate.quantity - element.quantity;
         Stock.findByIdAndUpdate(itemWithOldestDate._id, {
           quantity: updatedQuantity,
         }).then((filteredStock) => {
 
-          console.log(filteredStock)
+         
         });
       });
     });
+
+    const updatedInvoice = await lattestInvoiceModel.findByIdAndUpdate(
+      { _id: "652f8866c509652ac19e0e8b" }, 
+      { $inc: { lattestInvoice: 1 } }, 
+      { new: true }
+    );
+
+    console.log(updatedInvoice.lattestInvoice)
 
     const newOrder = await Order.create({
       customer: customer,
@@ -81,6 +90,10 @@ exports.createOrder = async (req, res, next) => {
       shippingAddress: shippingAddress,
       paymentMethod: paymentMethod,
       couponCode: couponCode,
+      isInvoiceGenrated:updatedInvoice?true:false,
+      invoiceNumber:updatedInvoice.lattestInvoice,
+      invoiceGenrationDate: new Date()
+
       // giftVoucher: giftVoucher,
     });
 
