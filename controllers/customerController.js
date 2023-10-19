@@ -455,7 +455,7 @@ const getLoggedInCustomerCartItems = async (req, res) => {
       product: item.product,
       quantity: item.quantity,
       tax:item.tax,
-      // Add other product details if needed
+
     }));
 
     return res.send({

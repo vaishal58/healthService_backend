@@ -20,6 +20,9 @@ const productSchema = new mongoose.Schema({
   stock: {
     quantity: { type: Number },
   },
+  hsnCode:{type : String},
+  size : {type : String},
+  shippingCharge : {type : Number},
   material: { type: mongoose.Schema.Types.ObjectId, ref: "Material" },
   color: { type: mongoose.Schema.Types.ObjectId, ref: "Color" },
   season: {
