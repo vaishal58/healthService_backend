@@ -291,7 +291,7 @@ const forgotCustomerPassword = async (req, res) => {
   }).save();
 
   // Construct Reset Url
-  const resetUrl = `${process.env.FRONTEND_URL}/reset/${resetToken}`;
+  const resetUrl = `${process.env.FRONTEND_URL}/resetpassword/${resetToken}`;
 
   // Reset Email
   const message = `

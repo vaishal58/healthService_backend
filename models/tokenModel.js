@@ -7,6 +7,11 @@ const tokenSchema = new mongoose.Schema({
     required : true,
     ref : "user"
   },
+  customerId : {
+    type: mongoose.Schema.Types.ObjectId,
+    required : true,
+    ref : "Customer"
+  },
   token : {
     type : String,
     required : true,
