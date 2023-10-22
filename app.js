@@ -30,6 +30,7 @@ const DailyRatesRoutes = require("./routes/PricetypeRoutes");
 const BannerRoutes = require("./routes/BannerRoutes");
 const BlogRoutes = require("./routes/blogRouts")
 const DashboardRoutes = require("./routes/dashboardRouts")
+const ColorRoutes = require("./routes/ColorRoutes");
 
 
 
@@ -83,6 +84,7 @@ app.use("/products", express.static("./uploads/Products"));
 app.use("/cagtegory", express.static("./uploads/Category"));
 app.use("/banner", express.static("./uploads/Banner"));
 app.use("/blog-images", express.static("./uploads/Blog"));
+app.use("/color", express.static("./uploads/Color"));
 
 // Routes Middleware
 
@@ -102,11 +104,13 @@ app.use("/coupons", CouponRoutes);
 app.use("/gst", Gst);
 app.use("/dailyrates" , DailyRatesRoutes);
 app.use("/material" , MaterialRoutes);
-app.use("/color" , ColorRoutes);
+// app.use("/color" , ColorRoutes);
 app.use("/season" , SeasonRoutes);
 app.use("/banner" , BannerRoutes);
 app.use("/blog" , BlogRoutes);
 app.use("/dashboard" , DashboardRoutes);
+app.use("/color" , ColorRoutes);
+
 
 
 // app.use("/api" , menuRoutes);
