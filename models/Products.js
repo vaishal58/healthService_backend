@@ -10,7 +10,7 @@ const productSchema = new mongoose.Schema({
     ref: "SubSubCategory",
     default: null,
   },
-  tags : {type : Array },
+  tags: { type: Array },
   prices: {
     original: { type: Number },
     discounted: { type: Number },
@@ -20,9 +20,9 @@ const productSchema = new mongoose.Schema({
   stock: {
     quantity: { type: Number },
   },
-  hsnCode:{type : String},
-  size : {type : String},
-  shippingCharge : {type : Number},
+  hsnCode: { type: String },
+  size: { type: String },
+  shippingCharge: { type: Number },
   material: { type: mongoose.Schema.Types.ObjectId, ref: "Material" },
   color: { type: mongoose.Schema.Types.ObjectId, ref: "Color" },
   season: {
@@ -32,7 +32,11 @@ const productSchema = new mongoose.Schema({
   gst: { type: mongoose.Schema.Types.ObjectId, ref: "tax_and_gst" },
   sku: { type: String, unique: true },
   calculationOnWeight: { type: Boolean, default: false },
-  weightType: { type: mongoose.Schema.Types.Mixed ,default: null, ref: "PriceUpdate" },
+  weightType: {
+    type: mongoose.Schema.Types.Mixed,
+    default: null,
+    ref: "PriceUpdate",
+  },
   weight: { type: Number },
   laborCost: { type: Number },
   discountOnLaborCost: { type: Number },
@@ -40,11 +44,22 @@ const productSchema = new mongoose.Schema({
   isProductPopular: { type: Boolean, default: true },
   isProductNew: { type: Boolean, default: true },
   createdAt: { type: Date, default: Date.now },
-  filters : {type: Array},
+  filters: { type: Array },
   color: { type: String },
   material: { type: String },
   season: { type: String },
-
+  isVariant: { type: Boolean, default: false },
+  mainProductId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Product",
+    default: null,
+  },
+  productColor: { type:String , ref: "Color" },
+  productSize: { type: String, ref: "Size" },
+  OtherVariations: {
+    type: Array,
+    ref: "Product",
+  },
 });
 
 const Product = mongoose.model("Product", productSchema);

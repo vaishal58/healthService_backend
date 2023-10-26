@@ -23,7 +23,7 @@ const galleryDetailsRoutes = require("./routes/GalleryMasterRoutes");
 const StocksRoutes = require("./routes/StockRoutes");
 const CouponRoutes = require("./routes/couponRoutes");
 const MaterialRoutes = require("./routes/MaterialRoutes");
-const ColorRoutes = require("./routes/ColorRoutes");
+// const ColorRoutes = require("./routes/ColorRoutes");
 const SeasonRoutes = require("./routes/SeasonRoutes");
 const Gst = require("./routes/gstRoutes");
 const DailyRatesRoutes = require("./routes/PricetypeRoutes");
@@ -31,6 +31,7 @@ const BannerRoutes = require("./routes/BannerRoutes");
 const BlogRoutes = require("./routes/blogRouts")
 const DashboardRoutes = require("./routes/dashboardRouts")
 const ColorRoutes = require("./routes/ColorRoutes");
+const SizeRoutes = require("./routes/SizeRoutes");
 
 
 
@@ -110,6 +111,7 @@ app.use("/banner" , BannerRoutes);
 app.use("/blog" , BlogRoutes);
 app.use("/dashboard" , DashboardRoutes);
 app.use("/color" , ColorRoutes);
+app.use("/size" , SizeRoutes);
 
 
 

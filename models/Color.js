@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 
 const colorSchema = new mongoose.Schema({
-  product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
+  // product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },/
   name: { type: String },
-  photo: { type: String },
+  // photo: { type: String },
   createdAt: { type: Date, default: Date.now },
 });
 

@@ -1,15 +1,28 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
-const { createOrder, getOrders, updateOrder, getOrderById, deleteOrder } = require("../controllers/OrderController");
+const {
+  createOrder,
+  getOrders,
+  updateOrder,
+  getOrderById,
+  deleteOrder,
+  getHighValueCustomers,
+  getMedValueCustomers,
+  getTopSellingProducts,
+} = require("../controllers/OrderController");
 
 const router = express.Router();
 
 router.use(cookieParser());
 
-router.post("/addorder" , createOrder);
-router.post("/getallorders" , getOrders);
-router.post("/getspecificorder/:id" , getOrderById);
-router.post("/updateorder/:id" , updateOrder);
-router.post("/deleteorder/:id" ,  deleteOrder);
+router.post("/addorder", createOrder);
+router.post("/getallorders", getOrders);
+router.post("/getspecificorder/:id", getOrderById);
+router.post("/updateorder/:id", updateOrder);
+router.post("/deleteorder/:id", deleteOrder);
+router.post("/gethighcustomerdata", getHighValueCustomers);
+router.post("/getmedcustomerdata", getMedValueCustomers);
+router.post("/gettopsellproducts", getTopSellingProducts);
+
 
 module.exports = router;

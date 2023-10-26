@@ -189,3 +189,110 @@ exports.deleteOrder = async (req, res, next) => {
     return res.send({ success: false, error: error.message });
   }
 };
+
+exports.getHighValueCustomers = async (req, res, next) => {
+  try {
+    const highValueCustomers = await Order.aggregate([
+      {
+        $group: {
+          _id: "$customer",
+          totalShoppingAmount: { $sum: "$totalAmount" },
+        },
+      },
+      {
+        $match: { totalShoppingAmount: { $gt: 50000 } },
+      },
+      {
+        $lookup: {
+          from: "customers", // Replace with the actual name of your Customers collection
+          localField: "_id",
+          foreignField: "_id",
+          as: "customerData",
+        },
+      },
+      {
+        $unwind: "$customerData",
+      },
+      {
+        $project: {
+          customerData: 1,
+          totalShoppingAmount: 1,
+        },
+      },
+    ]);
+
+    return res.send({success:true, highValueCustomers: highValueCustomers });
+  } catch (error) {
+    return res.send({ error: error.message });
+  }
+};
+
+exports.getMedValueCustomers = async (req, res, next) => {
+  try {
+    const highValueCustomers = await Order.aggregate([
+      {
+        $group: {
+          _id: "$customer",
+          totalShoppingAmount: { $sum: "$totalAmount" },
+        },
+      },
+      {
+        $match: { totalShoppingAmount: { $gt: 20000 } },
+      },
+      {
+        $lookup: {
+          from: "customers", // Replace with the actual name of your Customers collection
+          localField: "_id",
+          foreignField: "_id",
+          as: "customerData",
+        },
+      },
+      {
+        $unwind: "$customerData",
+      },
+      {
+        $project: {
+          customerData: 1,
+          totalShoppingAmount: 1,
+        },
+      },
+    ]);
+
+    return res.send({success :true, highValueCustomers: highValueCustomers });
+  } catch (error) {
+    return res.send({ error: error.message });
+  }
+};
+
+exports.getTopSellingProducts = async (req, res, next) => {
+  try {
+    const topSellingProducts = await Order.aggregate([
+      { $unwind: "$products" },
+      {
+        $group: {
+          _id: "$products.product",
+          totalQuantityOrdered: { $sum: "$products.quantity" },
+        },
+      },
+      {
+        $sort: { totalQuantityOrdered: -1 },
+      },
+    ]);
+
+    // Fetch product details for each top-selling product
+    const topSellingProductDetails = await Promise.all(
+      topSellingProducts.map(async (product) => {
+        const productDetails = await Product.findById(product._id);
+        return {
+          product: productDetails,
+          totalQuantityOrdered: product.totalQuantityOrdered,
+        };
+      })
+    );
+
+    return res.send({ success: true, topSellingProducts: topSellingProductDetails });
+  } catch (error) {
+    return res.send({ success: false, error: error.message });
+  }
+};
+

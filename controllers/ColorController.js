@@ -7,7 +7,7 @@ exports.getColors = async (req, res, next) => {
     if (colors.length === 0) {
       return res.end();
     }
-    return res.send({ colors });
+    return res.send({ success : true, colors: colors });
   } catch (error) {
     return res.send({ error: error.message });
   }
@@ -16,10 +16,10 @@ exports.getColors = async (req, res, next) => {
 // Add a new color
 exports.addColor = async (req, res, next) => {
   try {
-    const { product, name } = req.body;
-    const photo = req.file ? req.file.filename : "";
+    const { name } = req.body;
+    // const photo = req.file ? req.file.filename : "";
 
-    const newRecord = await Color.create({ product, name, photo });
+    const newRecord = await Color.create({  name });
 
     return res.send({
       success: true,
@@ -84,14 +84,7 @@ exports.updateColor = async (req, res, next) => {
 exports.deleteColor = async (req, res, next) => {
   try {
     const colorId = req.params.id;
-    const record = await Color.findByIdAndUpdate(
-      colorId,
-      {
-        deleted: true,
-        deletedAt: new Date(),
-      },
-      { new: true }
-    );
+    const record = await Color.findByIdAndDelete(colorId);
 
     if (!record) {
       return res.send({ success: true, message: "Color not found" });

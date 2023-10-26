@@ -1,6 +1,7 @@
 const Order = require("../models/Order");
 const Product = require("../models/Products");
 const Customer = require("../models/Customer");
+const moment = require("moment");
 
 exports.getDashboardData = async (req, res, next) => {
   try {
@@ -41,6 +42,20 @@ exports.getDashboardData = async (req, res, next) => {
     const cancelledOrders = await Order.countDocuments({ status: "cancelled" });
     const returnOrders = await Order.countDocuments({ status: "return" });
 
+    const totalEarnings = await Order.aggregate([
+      {
+        $group: {
+          _id: null,
+          totalEarnings: { $sum: "$totalAmount" },
+        },
+      },
+    ]);
+
+    const currentDate = moment();
+    const weeklyEarnings = await calculateEarningsForInterval(currentDate, 7, "days");
+    const monthlyEarnings = await calculateEarningsForInterval(currentDate, 1, "months");
+    const yearlyEarnings = await calculateEarningsForInterval(currentDate, 1, "years");
+
     return res.send({
       orders: {
         totalOrders: totalOrders,
@@ -61,8 +76,35 @@ exports.getDashboardData = async (req, res, next) => {
         SeasonalProducts: SeasonalProducts
       },
       customers: customers,
+      totalEarnings: totalEarnings[0] ? totalEarnings[0].totalEarnings : 0,
+      weeklyEarnings: weeklyEarnings,
+      monthlyEarnings: monthlyEarnings,
+      yearlyEarnings: yearlyEarnings,
     });
   } catch (error) {
     return res.send({ error: error.message });
   }
 };
+
+async function calculateEarningsForInterval(date, value, unit) {
+  const startDate = date.clone().subtract(value, unit);
+  const endDate = date.clone();
+  const earnings = await Order.aggregate([
+    {
+      $match: {
+        createdAt: {
+          $gte: startDate.toDate(),
+          $lt: endDate.toDate(),
+        },
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        totalEarnings: { $sum: "$totalAmount" },
+      },
+    },
+  ]);
+
+  return earnings[0] ? earnings[0].totalEarnings : 0;
+}

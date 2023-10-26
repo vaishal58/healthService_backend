@@ -31,6 +31,9 @@ const BannerRoutes = require("./routes/BannerRoutes");
 const BlogRoutes = require("./routes/blogRouts")
 const DashboardRoutes = require("./routes/dashboardRouts")
 const ColorRoutes = require("./routes/ColorRoutes");
+const SizeRoutes = require("./routes/SizeRoutes");
+
+
 
 
 
@@ -113,6 +116,7 @@ app.use("/banner" , BannerRoutes);
 app.use("/blog" , BlogRoutes);
 app.use("/dashboard" , DashboardRoutes);
 app.use("/color" , ColorRoutes);
+app.use("/size" , SizeRoutes);
 
 
 
