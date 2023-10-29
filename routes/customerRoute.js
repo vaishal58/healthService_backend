@@ -1,6 +1,6 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
-const { registerCustomer, loginCustomer, getCustomers, getLoggedInCustomer, logoutCustomer, getSpecificCustomer, loginStatus, updateCustomerPassword, forgotCustomerPassword, resetCustomerPassword, updateCustomer, DeleteCustomer, addToCart, removeFromCart, getLoggedInCustomerCartItems, removeAllFromCart, updateCartItem, addToWishlist, getLoggedInCustomerWishlistItems, removeFromWishlist, getTotalActiveUsers } = require("../controllers/customerController");
+const { registerCustomer, loginCustomer, getCustomers, getLoggedInCustomer, logoutCustomer, getSpecificCustomer, loginStatus, updateCustomerPassword, forgotCustomerPassword, resetCustomerPassword, updateCustomer, DeleteCustomer, addToCart, removeFromCart, getLoggedInCustomerCartItems, removeAllFromCart, updateCartItem, addToWishlist, getLoggedInCustomerWishlistItems, removeFromWishlist, getTotalActiveUsers, getOrderHistorybyCustomerId } = require("../controllers/customerController");
 const protect = require("../middlewares/authMiddleware");
 const router = express.Router();
 
@@ -26,6 +26,7 @@ router.post("/updatecart/:id" , updateCartItem);
 router.post("/createwishlist/:id" , addToWishlist);
 router.post("/getcustomerwishlist/:id" , getLoggedInCustomerWishlistItems);
 router.post("/removefromwishlist/:id" , removeFromWishlist);
+router.post("/getorderhistory/:id" , getOrderHistorybyCustomerId);
 
 
 module.exports = router;

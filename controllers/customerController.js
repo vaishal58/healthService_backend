@@ -1,4 +1,5 @@
 const Customer = require("../models/Customer");
+const Order = require("../models/Order");
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
@@ -749,6 +750,24 @@ const removeFromWishlist = async (req, res) => {
   }
 };
 
+// Get orderHistory of customer  by Customer's Id
+const getOrderHistorybyCustomerId = async (req, res) => {
+  try {
+    const customerId = req.params.id;
+    const customer = await Customer.findById(customerId).populate('orderHistory'); 
+
+    if (!customer) {
+      return res.send({ message: 'Customer not found' });
+    }
+
+    const orderHistory = customer.orderHistory; 
+
+    res.send({success:true, orderHistory:orderHistory});
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
 
 
 
@@ -774,4 +793,5 @@ module.exports = {
   addToWishlist,
   getLoggedInCustomerWishlistItems,
   removeFromWishlist,
+  getOrderHistorybyCustomerId
 };
