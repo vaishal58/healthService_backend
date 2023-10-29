@@ -96,6 +96,12 @@ exports.createOrder = async (req, res, next) => {
 
       // giftVoucher: giftVoucher,
     });
+    
+    const customerDoc = await Customer.findById(customer);
+    if (customerDoc) {
+      customerDoc.orderHistory.push(newOrder._id);
+      await customerDoc.save();
+    }
 
     return res.send({
       success: true,
