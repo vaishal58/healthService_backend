@@ -243,7 +243,12 @@ exports.getMedValueCustomers = async (req, res, next) => {
         },
       },
       {
-        $match: { totalShoppingAmount: { $gt: 20000 } },
+        $match: {
+          totalShoppingAmount: {
+            $gte: 15000, // Greater than or equal to 15,000
+            $lte: 40000, // Less than or equal to 40,000
+          },
+        },
       },
       {
         $lookup: {
@@ -264,11 +269,12 @@ exports.getMedValueCustomers = async (req, res, next) => {
       },
     ]);
 
-    return res.send({success :true, highValueCustomers: highValueCustomers });
+    return res.send({ success: true,  highValueCustomers: highValueCustomers });
   } catch (error) {
     return res.send({ error: error.message });
   }
 };
+
 
 exports.getTopSellingProducts = async (req, res, next) => {
   try {

@@ -340,14 +340,18 @@ const getAllProducts = async (req, res) => {
     }
 
     if (minPrice && !isNaN(minPrice)) {
-      filter['prices.discounted'] = { $gte: minPrice }; // Filter for minimum price
+      if (filter['prices.discounted']) {
+        filter['prices.discounted'].$gte = maxPrice; 
+      } else {
+        filter['prices.calculatedPrice'] = { $gte: maxPrice };
+      }
     }
 
     if (maxPrice && !isNaN(maxPrice)) {
       if (filter['prices.discounted']) {
-        filter['prices.discounted'].$lte = maxPrice; // Filter for maximum price
+        filter['prices.discounted'].$lte = maxPrice; 
       } else {
-        filter['prices.discounted'] = { $lte: maxPrice };
+        filter['prices.calculatedPrice'] = { $lte: maxPrice };
       }
     }
 
@@ -358,6 +362,7 @@ const getAllProducts = async (req, res) => {
 
     return res.send({ success: true, products });
   } catch (error) {
+    console.log(error)
     return res.send({ success: false, error: error });
   }
 };
