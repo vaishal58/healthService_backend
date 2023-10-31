@@ -318,8 +318,8 @@ const getAllProducts = async (req, res) => {
     const color = req.query.color;
     const material = req.query.material;
     const season = req.query.season;
-    // const minPrice = req.query.minPrice;
-    // const maxPrice = req.query.maxPrice;
+    const minPrice = req.query.minPrice; 
+    const maxPrice = req.query.maxPrice;
 
     const filter = {};
 
@@ -339,12 +339,26 @@ const getAllProducts = async (req, res) => {
       filter.season = season;
     }
 
+    if (minPrice && !isNaN(minPrice)) {
+      filter['prices.discounted'] = { $gte: minPrice }; // Filter for minimum price
+    }
+
+    if (maxPrice && !isNaN(maxPrice)) {
+      if (filter['prices.discounted']) {
+        filter['prices.discounted'].$lte = maxPrice; // Filter for maximum price
+      } else {
+        filter['prices.discounted'] = { $lte: maxPrice };
+      }
+    }
+
     // Use the filter object in the query to fetch products
     const products = await Product.find(filter).exec();
+    // const products = await Product.find({ 'prices.discounted': { $lte: 1000 } }).exec();
+
 
     return res.send({ success: true, products });
   } catch (error) {
-    return res.send({ success: false, error: "Failed to fetch products." });
+    return res.send({ success: false, error: error });
   }
 };
 
