@@ -4,6 +4,8 @@ const Product = require("../models/Products");
 const GST = require("../models/Gst");
 const Stock = require("../models/Stock");
 const lattestInvoiceModel = require("../models/lattestInvoice");
+const Category = require('../models/ProductCat');
+
 
 exports.getOrders = async (req, res, next) => {
   try {
@@ -307,4 +309,36 @@ exports.getTopSellingProducts = async (req, res, next) => {
     return res.send({ success: false, error: error.message });
   }
 };
+
+
+// exports.getStockReportByProduct = async (req, res, next) => {
+//   try {
+//     // Fetch all products and their corresponding stock quantities
+//     const stockReport = await Product.aggregate([
+//       {
+//         $lookup: {
+//           from: "stocks", // Replace with your Stock collection name
+//           localField: "_id",
+//           foreignField: "product",
+//           as: "stockData",
+//         },
+//       },
+//       {
+//         $project: {
+//           _id: 0,
+//           product: "$name", // Use the name or another product property
+//           stockQuantity: { $sum: "$stockData.quantity" },
+//         },
+//       },
+//     ]);
+
+//     return res.send({ success: true, stockReport });
+//   } catch (error) {
+//     return res.send({ success: false, error: error.message });
+//   }
+// };
+
+
+
+
 

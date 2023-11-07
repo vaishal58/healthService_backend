@@ -1,10 +1,13 @@
 const Stock = require("../models/Stock");
 const Product = require("../models/Products");
+const Category = require("../models/ProductCat");
+const PriceUpdate = require("../models/PriceUpdate");
+
 
 // Create a new stock entry
 exports.createStock = async (req, res, next) => {
   try {
-    const { ProductId, quantity,currentPricePerUnit , date } = req.body;
+    const { ProductId, quantity, currentPricePerUnit, date } = req.body;
 
     const product = await Product.findById(ProductId);
 
@@ -13,7 +16,9 @@ exports.createStock = async (req, res, next) => {
       quantity,
       currentPricePerUnit,
       name: product.name,
-      date : date,
+      color: product.productColor,
+      size: product.productSize,
+      date: date,
     });
 
     await newStock.save();
@@ -123,6 +128,95 @@ exports.deleteStockById = async (req, res, next) => {
     return res.send({
       success: true,
       message: "Stock entry deleted successfully",
+    });
+  } catch (error) {
+    return res.send({
+      success: false,
+      error: "Internal Server Error",
+    });
+  }
+};
+
+
+// Get stock entries by category ID
+exports.getStockByCategory = async (req, res, next) => {
+  try {
+    const categoryId = req.params.id;
+
+    const category = await Category.findById(categoryId);
+
+    if (!category) {
+      return res.send({
+        success: false,
+        error: "Category not found",
+      });
+    }
+
+    // Find all products that belong to the specified category
+    const productsInCategory = await Product.find({ category: categoryId });
+
+    if (productsInCategory.length === 0) {
+      return res.send({
+        success: true,
+        message: "No products found in the specified category",
+        stockEntries: [],
+      });
+    }
+
+    // Extract the product IDs from the found products
+    const productIds = productsInCategory.map((product) => product._id);
+
+    // Find all stock entries that match the product IDs
+    const stockEntries = await Stock.find({ ProductId: { $in: productIds } });
+
+    return res.send({
+      success: true,
+      message: "Stock entries by category retrieved successfully",
+      stockEntries,
+    });
+  } catch (error) {
+    return res.send({
+      success: false,
+      error: "Internal Server Error",
+    });
+  }
+};
+
+
+exports.getStockByPriceUpdate = async (req, res, next) => {
+  try {
+    const categoryId = req.params.id;
+
+    const category = await PriceUpdate.findById(categoryId);
+
+    if (!category) {
+      return res.send({
+        success: false,
+        error: "Category not found",
+      });
+    }
+
+    // Find all products that belong to the specified category
+    const productsInCategory = await Product.find({ weightType: categoryId });
+
+    if (productsInCategory.length === 0) {
+      return res.send({
+        success: true,
+        message: "No products found in the specified category",
+        stockEntries: [],
+      });
+    }
+
+    // Extract the product IDs from the found products
+    const productIds = productsInCategory.map((product) => product._id);
+
+    // Find all stock entries that match the product IDs
+    const stockEntries = await Stock.find({ ProductId: { $in: productIds } });
+
+    return res.send({
+      success: true,
+      message: "Stock entries by category retrieved successfully",
+      stockEntries,
     });
   } catch (error) {
     return res.send({

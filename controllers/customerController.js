@@ -769,6 +769,44 @@ const getOrderHistorybyCustomerId = async (req, res) => {
   }
 };
 
+const getCustomerReportByDateRange = async (req, res) => {
+  try {
+    
+    const { startDate, endDate } = req.query;
+
+    // Ensure that startDate and endDate are valid date strings in the "DD/MM/YYYY" format
+    const datePattern = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/;
+    
+    if (!datePattern.test(startDate) || !datePattern.test(endDate)) {
+      return res.status(400).json({ success: false, msg: "Please provide valid date range in the 'DD/MM/YYYY' format." });
+    }
+
+ 
+    const [,  startMonth, startDay ,startYear] = startDate.match(datePattern);
+    const [,  endMonth, endDay,endYear] = endDate.match(datePattern);
+
+  
+    const start = new Date(`${startYear}-${startMonth}-${startDay}`);
+    const end = new Date(`${endYear}-${endMonth}-${endDay}`);
+
+    
+    const customers = await Customer.find({
+      createdAt: {
+        $gte: start, 
+        $lte: end,   
+      },
+    });
+
+    return res.status(200).json({
+      success: true,
+      msg: "Customer report generated successfully",
+      customers,
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, error: error.message });
+  }
+};
+
 
 
 
@@ -793,5 +831,6 @@ module.exports = {
   addToWishlist,
   getLoggedInCustomerWishlistItems,
   removeFromWishlist,
-  getOrderHistorybyCustomerId
+  getOrderHistorybyCustomerId,
+  getCustomerReportByDateRange
 };

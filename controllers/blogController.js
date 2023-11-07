@@ -24,6 +24,7 @@ exports.addBlog = async (req, res, next) => {
       blogTitle: req.body.blogTitle,
       blogFeed: req.body.blogFeed,
       date: req.body.date,
+      blogCategory :req.body.blogCategory, 
       imagePath: req.file ? req.file.filename : "",
       description: req.body.description,
       blog: req.body.blog
@@ -40,6 +41,26 @@ exports.addBlog = async (req, res, next) => {
   }
 };
 
+exports.getBlogbyblogCategoryId = async (req, res, next) => {
+  try {
+    const blogCategoryId = req.params.id;
+
+    
+    const blogs = await blogModel.find({ blogCategory: blogCategoryId }).lean();
+
+    if (blogs.length === 0) {
+      return res.status(204).end(); 
+    }
+
+    return res.status(200).json({ data: blogs });
+  } catch (error) {
+    
+    console.error(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
 
 exports.getBlogbyId = async (req, res, next) => {
   try {
@@ -47,7 +68,7 @@ exports.getBlogbyId = async (req, res, next) => {
     if (!recordExists || recordExists.deleted) {
       return res.status(400).send("error");
     } else {
-      return res.status(200).send({ data: recordExists });
+      return res.status(200).send({ recordExists });
     }
   } catch (error) {
     // Handle the error here, you can send an error response or log it
@@ -70,6 +91,7 @@ exports.updateBlog = async (req, res, next) => {
       blogTitle: req.body.blogTitle,
       blogFeed: req.body.blogFeed,
       date: req.body.date,
+      blogCategory :req.body.blogCategory,
       blog: req.body.blog,
       imagePath: req.file ? req.file.filename : "",
       description: req.body.description,

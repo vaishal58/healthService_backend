@@ -5,6 +5,8 @@ const mongoose = require("mongoose");
 const stockSchema = new mongoose.Schema({
   ProductId: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
   name: { type:String },
+  color: { type:String },
+  size: { type:String },
   quantity: {
     type: Number,
     required: true,

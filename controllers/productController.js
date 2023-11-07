@@ -7,7 +7,6 @@ const Material = require("../models/Material");
 const Season = require("../models/Season");
 
 // Create Product
-
 const addProduct = async (req, res, next) => {
   const {
     name,
@@ -104,11 +103,8 @@ const addProduct = async (req, res, next) => {
     });
   } catch (error) {
     console.log(error);
-    if (error.code === 11000) {
-      res.send({ success: false, error: "Duplicate SKU" });
-    } else {
-      res.status(500).send({ success: false, error: "Internal Server Error" });
-    }
+
+    res.status(500).send({ success: false, error: "Internal Server Error" });
   }
 };
 
@@ -219,11 +215,8 @@ const addVarProduct = async (req, res, next) => {
     });
   } catch (error) {
     console.log(error);
-    if (error.code === 11000) {
-      res.send({ success: false, error: "Duplicate SKU" });
-    } else {
-      res.status(500).send({ success: false, error: "Internal Server Error" });
-    }
+
+    res.status(500).send({ success: false, error: "Internal Server Error" });
   }
 };
 
@@ -260,7 +253,7 @@ const getVarProductById = async (req, res) => {
 
 const getAllVarProducts = async (req, res) => {
   const { productIds } = req.body;
-  console.log(req.body)
+  console.log(req.body);
 
   try {
     const products = await Product.find({ _id: { $in: productIds } });
@@ -318,7 +311,7 @@ const getAllProducts = async (req, res) => {
     const color = req.query.color;
     const material = req.query.material;
     const season = req.query.season;
-    const minPrice = req.query.minPrice; 
+    const minPrice = req.query.minPrice;
     const maxPrice = req.query.maxPrice;
 
     const filter = {};
@@ -340,29 +333,33 @@ const getAllProducts = async (req, res) => {
     }
 
     if (minPrice && !isNaN(minPrice)) {
-      if (filter['prices.discounted']) {
-        filter['prices.discounted'].$gte = maxPrice; 
-      } else {
-        filter['prices.calculatedPrice'] = { $gte: maxPrice };
+      if (filter.prices) {
+        if (filter.prices.discounted !== null) {
+          filter["prices.discounted"].$gte = minPrice;
+        } else if (filter.prices.calculatedPrice !== null) {
+          filter["prices.calculatedPrice"].$gte = minPrice;
+        }
       }
+      console.log("minPrice:", minPrice);
     }
 
     if (maxPrice && !isNaN(maxPrice)) {
-      if (filter['prices.discounted']) {
-        filter['prices.discounted'].$lte = maxPrice; 
-      } else {
-        filter['prices.calculatedPrice'] = { $lte: maxPrice };
+      if (filter.prices) {
+        if (filter.prices.discounted !== null) {
+          filter["prices.discounted"].$lte = maxPrice;
+        } else if (filter.prices.calculatedPrice !== null) {
+          filter["prices.calculatedPrice"].$lte = maxPrice;
+        }
       }
+      console.log("maxPrice:", maxPrice);
     }
 
     // Use the filter object in the query to fetch products
     const products = await Product.find(filter).exec();
-    // const products = await Product.find({ 'prices.discounted': { $lte: 1000 } }).exec();
-
 
     return res.send({ success: true, products });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return res.send({ success: false, error: error });
   }
 };
@@ -464,6 +461,29 @@ const getProductsByCategoryId = async (req, res) => {
   }
 };
 
+// Get product by product tags
+const getProductsByTag = async (req, res) => {
+  try {
+    const tag = req.query.tag;
+
+    if (!tag) {
+      return res.send({ success: false, error: "Tag parameter is required." });
+    }
+
+    const filter = { tags: { $regex: new RegExp(tag, "i") } };
+
+    const products = await Product.find(filter).exec();
+
+    return res.send({ success: true, products });
+  } catch (error) {
+    console.log(error);
+    return res.send({ success: false, error: error });
+  }
+};
+
+
+
+
 module.exports = {
   getAllProducts,
   getSpecificProduct,
@@ -475,4 +495,5 @@ module.exports = {
   addVarProduct,
   getVarProductById,
   getAllVarProducts,
+  getProductsByTag,
 };

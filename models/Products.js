@@ -30,7 +30,7 @@ const productSchema = new mongoose.Schema({
     ref: "Season",
   },
   gst: { type: mongoose.Schema.Types.ObjectId, ref: "tax_and_gst" },
-  sku: { type: String, unique: true },
+  sku: { type: String},
   calculationOnWeight: { type: Boolean, default: false },
   weightType: {
     type: mongoose.Schema.Types.Mixed,

@@ -5,7 +5,8 @@ const {
     getBlogbyId,
     updateBlog,
     deleteBlog,
-    getAllIncDel
+    getAllIncDel,
+    getBlogbyblogCategoryId
 } = require("../controllers/blogController");
 const router = express.Router();
 const multer = require("multer");
@@ -36,6 +37,7 @@ const upload = multer({ storage: storage, fileFilter: imageFileFilter });
 router.post("/get-blog", getBlog);
 router.post("/add-blog",upload.single("imagePath"),addBlog);
 router.post("/get-blog/:id", getBlogbyId);
+router.post("/getblogbycategory/:id", getBlogbyblogCategoryId);
 router.post("/update-blog/:id",upload.single("imagePath"),updateBlog);
 router.post("/delete-blog/:id", deleteBlog);
 

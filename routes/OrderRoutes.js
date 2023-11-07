@@ -9,6 +9,7 @@ const {
   getHighValueCustomers,
   getMedValueCustomers,
   getTopSellingProducts,
+  getStockReportByProduct,
 } = require("../controllers/OrderController");
 
 const router = express.Router();
@@ -23,6 +24,8 @@ router.post("/deleteorder/:id", deleteOrder);
 router.post("/gethighcustomerdata", getHighValueCustomers);
 router.post("/getmedcustomerdata", getMedValueCustomers);
 router.post("/gettopsellproducts", getTopSellingProducts);
+// router.post("/getstockbyproduct", getStockReportByProduct);
+
 
 
 module.exports = router;
