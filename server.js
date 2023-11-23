@@ -35,6 +35,7 @@ const SizeRoutes = require("./routes/SizeRoutes");
 const BlogCatRoutes = require("./routes/BlogCategoryRoutes");
 const SubscribeRoutes = require("./routes/SubscribeRoutes");
 const contactRoutes = require("./routes/ContactRoutes");
+const paymentGatewayRoutes = require("./routes/PaymentGateway");
 
 
 
@@ -123,6 +124,7 @@ app.use("/size" , SizeRoutes);
 app.use("/blogcategory" , BlogCatRoutes);
 app.use("/subscribe" , SubscribeRoutes);
 app.use("/contact" , contactRoutes);
+app.use("/api" , paymentGatewayRoutes);
 
 
 

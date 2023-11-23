@@ -172,11 +172,7 @@ const updateUser = asyncHandler(async (req, res) => {
       active: active,
     });
 
-    // if (!name || !roles || !photo || !status) {
-    //   return res
-    //     // .status(400)
-    //     .json({ success: false, msg: "Please fill all required fields" });
-    // }
+    
 
     return res.send({
       success: true,
