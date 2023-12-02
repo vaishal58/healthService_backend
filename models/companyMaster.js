@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 
 const companySchema = new mongoose.Schema({
+
+
   companyName:{
     type: String,
     required: [true, "Please enter your name!"],
@@ -13,6 +15,24 @@ const companySchema = new mongoose.Schema({
     type: String,
     
   }],
+   
+  companyMember : [
+    {
+      name:{
+        type:String
+      },
+      email:{
+        type:String
+      },
+      number:{
+        type:String
+      },
+      email:{
+        type:String
+      }
+    }
+  ],
+  
   companyJobCategorys: [{
     type: String,
   }],
@@ -21,6 +41,8 @@ const companySchema = new mongoose.Schema({
         type: String,
     }
   ],
+
+  
   
   //other changes remaining
 });
