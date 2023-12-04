@@ -211,3 +211,45 @@ exports.getAllEmployByCompany = async (req,res) => {
     }
    
    }
+
+
+
+
+   exports.getAllEmployByCompanyAndLocation = async (req,res) => {
+   
+    try{
+        const id = req.params.id
+
+        const {location} = req.body
+
+
+        console.log(req.body)
+
+   
+     await Company.findOne( { _id : id } ).populate("companyEmployees").then( (data) => {
+   
+       const newData = data.companyEmployees
+
+
+       const empLocation = newData.filter( ( ldata ) => ldata.companyLocation == location )
+
+       console.log( empLocation )
+
+       res.status(201).json( {
+        data : empLocation
+       } )
+     } ).catch( (errot)=>{
+       console.log("error :" ,error);
+       res.status(501).json({
+         message:"internal server error"
+       })
+     } )
+   
+    }catch(error){
+       console.log("error :" ,error);
+       res.status(501).json({
+         message:"internal server error"
+       })
+    }
+   
+   }   
