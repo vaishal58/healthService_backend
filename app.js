@@ -68,6 +68,9 @@ app.use(cors());
 app.use("/api", userRoute);
 app.use("/api", roleRoutes);
 
+app.use("/employ", employRoutes);
+app.use("/company",companyRoute);
+
 
 // ROUTES
 app.get("/", (req, res) => {
