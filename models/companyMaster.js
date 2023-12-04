@@ -16,22 +16,47 @@ const companySchema = new mongoose.Schema({
     
   }],
    
-  companyMember : [
-    {
-      name:{
+  
+    
+      name1:{
         type:String
       },
-      email:{
+      email1:{
         type:String
       },
-      number:{
+      number1:{
         type:String
       },
-      email:{
+      designation1:{
         type:String
-      }
-    }
-  ],
+      },
+
+      name2:{
+        type:String
+      },
+      email2:{
+        type:String
+      },
+      number2:{
+        type:String
+      },
+      designation2:{
+        type:String
+      },
+
+      name3:{
+        type:String
+      },
+      email3:{
+        type:String
+      },
+      number3:{
+        type:String
+      },
+      designation3:{
+        type:String
+      },
+  
   
   companyJobCategorys: [{
     type: String,
