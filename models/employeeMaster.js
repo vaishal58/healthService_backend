@@ -1,77 +1,59 @@
 const mongoose = require("mongoose");
 
 const employeeSchema = new mongoose.Schema({
-
-  employeeName:{
+  employeeName: {
     type: String,
     required: [true, "Please enter your name!"],
   },
-
-  employeeNameAbbrevation:{
-    type:String,
+  employeeNameAbbrevation: {
+    type: String,
 
   },
-
-  employeeFatherName:{
-    type:String ,
-    default:null
+  employeeFatherName: {
+    type: String,
+    default: null
   },
-
-  companyName:{
+  companyName: {
     type: String,
   },
-
-  companyLocation:{
+  companyLocation: {
     type: String,
-   
   },
-
-  companyJobCategorys:{
+  companyJobCategorys: {
     type: String,
   },
 
   companyDepartments:
-    {
-        type: String,
-    } ,
-  
-  employeeContactDetailsId :{
-      type: mongoose.Schema.Types.ObjectId,
-      ref:"EmployeeContactDetails"
-  },
-  employeeEyeDetailsId:{
-    type: mongoose.Schema.Types.ObjectId,
-      ref:"EmployeeEyeInformation"
+  {
+    type: String,
   },
 
-  employeeInvestigationDetailsId:{
+  employeeContactDetailsId: {
     type: mongoose.Schema.Types.ObjectId,
-      ref:"EmployeeInvestigationInformation"
+    ref: "EmployeeContactDetails"
   },
-  employeeBloodInvestigationDetailsId:{
+  employeeEyeDetailsId: {
     type: mongoose.Schema.Types.ObjectId,
-      ref:"EmployeeBloodInformation"
-  },
-  employeeVitalAndHistoryId:{
-    type: mongoose.Schema.Types.ObjectId,
-    ref:"EmployeeVitalsAndHistory"
-  },
-  employeeForm32Id:{
-    type: mongoose.Schema.Types.ObjectId,
-    ref:"EmployeeForm32"
-  },
-  employeeForm33Id:{
-    type: mongoose.Schema.Types.ObjectId,
-    ref:"EmployeeForm33"
+    ref: "EmployeeEyeInformation"
   },
 
-  employeeGenerelExaminationId:{
+  employeeInvestigationDetailsId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref:"EmployeeGeneralExamination"
+    ref: "EmployeeInvestigationInformation"
   },
 
-
-  // EmployeeGeneralExamination
+  employeeVitalAndHistoryId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "EmployeeVitalsAndHistory"
+  },
+  employeeForm32Id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "EmployeeForm32"
+  },
+  employeeForm33Id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "EmployeeForm33"
+  }
   //other changes remaining
 });
 

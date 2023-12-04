@@ -1,6 +1,9 @@
 const Employee = require("../models/employeeMaster")
-const Company  = require("../models/companyMaster") 
+
+const Company = require("../models/companyMaster")
+
 const { ObjectId } = require('mongodb');
+
 exports.addEmploy = async (req, res) => {
   try {
     const data = req.body;
@@ -21,6 +24,9 @@ exports.addEmploy = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+
+
 
 exports.getEmployById = async (req, res) => {
 
