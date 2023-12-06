@@ -70,6 +70,7 @@ app.use("/api", roleRoutes);
 
 app.use("/employ", employRoutes);
 app.use("/company",companyRoute);
+app.use("/checkup",checkupRoute )
 
 
 // ROUTES

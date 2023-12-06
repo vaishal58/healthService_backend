@@ -1,6 +1,32 @@
 const mongoose = require("mongoose");
 
 const employeeBloodInformationSchema = new mongoose.Schema({
+
+    companyId :{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"Company"
+    },
+
+    employeeId :{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"Employee"
+    },
+
+    checkupNameId : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "CheckupName"
+    },
+
+    checkupTypeId :{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "CheckupType"
+    },
+
+    checkupDataId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "CheckupData"
+    },
+
     companyId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Company"
@@ -10,6 +36,12 @@ const employeeBloodInformationSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Employee"
     },
+    
+    checkupNameID : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "CheckupName"
+    },
+
     hb: {
         type: String,
 

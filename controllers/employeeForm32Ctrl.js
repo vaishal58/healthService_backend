@@ -1,11 +1,13 @@
 
 const EmployeeForm32 = require("../models/employeeForm32")
-const Employee = require("../models/employeeMaster")
+
+const CheckupData = require("../models/checkupData")
 
 exports.addEmpForm32 = async (req, res) => {
     try {
         const data = req.body;
-        const { employeeId } = req.body
+
+        const {checkupDataId} = req.body
 
         const newForm32 = new EmployeeForm32(data);
 
@@ -21,10 +23,10 @@ exports.addEmpForm32 = async (req, res) => {
 
         const newid = newForm32._id;
 
-        await Employee.findByIdAndUpdate({ _id: employeeId }, {
-            employeeForm32Id: newid
-
-        })
+        await CheckupData.findByIdAndUpdate( {_id :checkupDataId} , 
+            
+            { $set: { 'employeeReports.employeeForm32Id': newid } },
+         )   
     } catch (error) {
         console.error("Internal server error:", error);
         res.status(500).json({ error: "Internal server error" });

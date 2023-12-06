@@ -7,6 +7,7 @@ const userRoute = require("./routes/userRoute");
 const roleRoutes = require("./routes/roleRoute");
 const employRoutes = require("./routes/employeeMasterRout");
 const companyRoute = require("./routes/companyMasterRout");
+const checkupRoute = require("./routes/checkupRoutes")
 const errorHandler = require("./middlewares/errorMiddleware");
 const cookieParser = require("cookie-parser");
 const protect = require("./middlewares/authMiddleware");
@@ -79,6 +80,7 @@ app.use("/api", userRoute);
 app.use("/api", roleRoutes);
 app.use("/employ", employRoutes);
 app.use("/company",companyRoute);
+app.use("/checkup",checkupRoute)
 
 // Error Middleware
 // app.use(errorHandler);

@@ -1,11 +1,14 @@
 
 const EmployeeVitalsAndHistory  = require("../models/employeeVitalsAndHistory")
-const Employee = require("../models/employeeMaster")
+
+const CheckupData = require("../models/checkupData")
+
 
 exports.addVitalAndHistory = async (req, res) => {
     try {
         const data = req.body;
-        const {employeeId} = req.body
+
+        const {checkupDataId} = req.body
 
         const newVitalAndHistory= new EmployeeVitalsAndHistory(data);
 
@@ -21,10 +24,10 @@ exports.addVitalAndHistory = async (req, res) => {
            
         const newid = newVitalAndHistory._id;    
 
-        await Employee.findByIdAndUpdate( {_id :employeeId} , {
-            employeeVitalAndHistoryId :newid 
-                
-        } )    
+        await CheckupData.findByIdAndUpdate( {_id :checkupDataId} , 
+            
+            { $set: { 'employeeReports.employeeVitalAndHistoryId': newid } },
+         )   
     } catch (error) {
         console.error("Internal server error:", error);
         res.status(500).json({ error: "Internal server error" });

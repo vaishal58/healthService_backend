@@ -12,6 +12,21 @@ const employeeEyeInformationSchema = new mongoose.Schema({
         ref:"Employee"
     },
 
+    checkupNameId : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "CheckupName"
+    },
+
+    checkupTypeId :{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "CheckupType"
+    },
+
+    checkupDataId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "CheckupData"
+    },
+
     distandVisionRightEye: {
         type: Number,
     },

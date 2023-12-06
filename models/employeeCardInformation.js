@@ -3,6 +3,30 @@ const mongoose = require("mongoose");
 // pending 
 
 const employeeCardInformationSchema = new mongoose.Schema({
+    companyId :{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"Company"
+    },
+
+    employeeId :{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"Employee"
+    },
+
+    checkupNameId : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "CheckupName"
+    },
+
+    checkupTypeId :{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "CheckupType"
+    },
+
+    checkupDataId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "CheckupData"
+    },
     drugAleogy: {
         type: String,
         required: [true, "Please enter your name!"],

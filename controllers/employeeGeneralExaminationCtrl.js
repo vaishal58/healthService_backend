@@ -1,11 +1,12 @@
 
 const  EmployeeGeneralExamination = require("../models/employeeGeneralExamination")
-const Employee = require("../models/employeeMaster")
+const CheckupData = require("../models/checkupData")
 
 exports.addEmpGeneralExamination = async (req, res) => {
     try {
         const data = req.body;
-        const {employeeId} = req.body
+
+        const {checkupDataId} = req.body
 
         const newGeneralExamination = new EmployeeGeneralExamination(data);
 
@@ -19,12 +20,12 @@ exports.addEmpGeneralExamination = async (req, res) => {
                 res.status(500).json({ error: "Error saving investigation details", details: err });
             });
            
-        const newid = newInvestigationInformation._id;    
+        const newid = newGeneralExamination._id;    
 
-        await Employee.findByIdAndUpdate( {_id :employeeId} , {
-            employeeGenerelExaminationId :newid 
-                
-        } )     
+          await CheckupData.findByIdAndUpdate( {_id :checkupDataId} , 
+            
+            { $set: { 'employeeReports.employeeGenerelExaminationId': newid } },
+         )  
     } catch (error) {
         console.error("Internal server error:", error);
         res.status(500).json({ error: "Internal server error" });

@@ -1,15 +1,31 @@
 const mongoose = require("mongoose");
 
 const employeeVitalsAndHistorySchema = new mongoose.Schema({
-    companyId: {
+    companyId :{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Company"
+        ref:"Company"
     },
 
-    employeeId: {
+    employeeId :{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Employee"
+        ref:"Employee"
     },
+
+    checkupNameId : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "CheckupName"
+    },
+
+    checkupTypeId :{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "CheckupType"
+    },
+
+    checkupDataId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "CheckupData"
+    },
+
     height: {
         type: Number,
 

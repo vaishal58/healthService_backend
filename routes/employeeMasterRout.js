@@ -1,6 +1,6 @@
 const express = require('express');
 const {addEmploy,getEmployById} = require("../controllers/employeeMasterCtrl");
-const {addEmpContactDetails} = require("../controllers/employeeContactDetailsCtrl")
+const {addEmpContactDetails , getEmpContactDetailsId} = require("../controllers/employeeContactDetailsCtrl")
 const {addEmpEyeInformation} = require("../controllers/employeeEyeInformation")
 const {addEmpInvestigationDetails} = require("../controllers/employeeInvestigationInformationCtrl")
 const {addVitalAndHistory} = require("../controllers/employeeVitalAndhistoryCtrl")
@@ -20,6 +20,7 @@ router.post("/set-employ-form-32-details",addEmpForm32)
 router.post("/set-employ-form-33-details",addEmpForm33)
 router.post("/set-employ-blood-information",addEmpBloodInformation)
 router.post("/set-employ-general-examination",addEmpGeneralExamination)
+router.post("/get-employ-contactetails-by-id",getEmpContactDetailsId)
 
 
 

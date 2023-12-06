@@ -1,28 +1,32 @@
 const mongoose = require("mongoose");
 
-const checkuopMasterSchema = new mongoose.Schema({
+const checkupNameMasterSchema = new mongoose.Schema({
+
   checkupName:{
     type: String,
     
   },
+
   checkupType:{
     type: mongoose.Schema.Types.ObjectId,
-    ref:"Employee",
+    ref:"CheckupType",
   },
+
   checkupDate:{
     type: String, 
+    default:Date.now().toLocaleString()
   },
-  companyJobCategorys: [{
-    type: String,
-  }],
-  companyDepartments:[
-    {
-        type: String,
-    }
-  ],
-  
-  //other changes remaining
+
+  companyId : {
+    type: mongoose.Schema.Types.ObjectId,
+    ref:"Company",
+  },
+
+  location:{
+    type: String
+  }
+
 });
 
 
-module.exports = mongoose.model("Checkup", checkuopMasterSchema);
+module.exports = mongoose.model("CheckupName", checkupNameMasterSchema);
