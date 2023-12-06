@@ -13,7 +13,7 @@ exports.addVitalAndHistory = async (req, res) => {
         const newVitalAndHistory= new EmployeeVitalsAndHistory(data);
 
         newVitalAndHistory
-            .save()
+            .save() 
             .then(() => {
                 res.status(201).json({ message: "empy vital and history added successfully" });
             })

@@ -24,8 +24,21 @@ const checkupNameMasterSchema = new mongoose.Schema({
 
   location:{
     type: String
-  }
+  },
 
+  // jovanu filter vise
+  allCheckUps:[
+    {
+      employeeId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"Employee",
+      },
+      checkupDateId :{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"CheckupData",
+      }
+    }
+  ]
 });
 
 
