@@ -1,11 +1,13 @@
 
 const EmployeeInvestigationInformation  = require("../models/employeeInvestigationInformation")
-const Employee = require("../models/employeeMaster")
+
+const CheckupData = require("../models/checkupData")
 
 exports.addEmpInvestigationDetails = async (req, res) => {
     try {
         const data = req.body;
-        const {employeeId} = req.body
+      
+        const {checkupDataId} = req.body
 
         const newInvestigationInformation= new EmployeeInvestigationInformation(data);
 
@@ -21,10 +23,10 @@ exports.addEmpInvestigationDetails = async (req, res) => {
            
         const newid = newInvestigationInformation._id;    
 
-        await Employee.findByIdAndUpdate( {_id :employeeId} , {
-            employeeInvestigationDetailsId :newid 
-                
-        } )    
+              await CheckupData.findByIdAndUpdate( {_id :checkupDataId} , 
+            
+            { $set: { 'employeeReports.employeeInvestigationDetailsId': newid } },
+         )    
     } catch (error) {
         console.error("Internal server error:", error);
         res.status(500).json({ error: "Internal server error" });

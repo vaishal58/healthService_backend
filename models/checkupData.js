@@ -1,60 +1,79 @@
 const mongoose = require("mongoose");
 
-const checkDataSchema = new mongoose.Schema({
-    checkupName: {
-        type: String,
+const checkupDataSchema = new mongoose.Schema({
+    
+    checkupNameId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "CheckupName",
     },
 
-    checkupType: {
+    checkupTypeId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Employee",
+        ref: "CheckupType",
     },
+
     checkupDate: {
         type: String,
     },
+
     companyId: {
-
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Company",
     },
+
     employeeId: {
-
-    },
-    employeeContactDetailsId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "EmployeeContactDetails"
-    },
-    employeeEyeDetailsId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "EmployeeEyeInformation"
+        ref: "Employee",
     },
 
-    employeeInvestigationDetailsId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "EmployeeInvestigationInformation"
-    },
-    employeeBloodInvestigationDetailsId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "EmployeeBloodInformation"
-    },
-    employeeVitalAndHistoryId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "EmployeeVitalsAndHistory"
-    },
-    employeeForm32Id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "EmployeeForm32"
-    },
-    employeeForm33Id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "EmployeeForm33"
-    },
+    employeeReports : {
 
-    employeeGenerelExaminationId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "EmployeeGeneralExamination"
-    },
+        employeeEyeDetailsId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "EmployeeEyeInformation",
+            default:null
+        },
+    
+        employeeInvestigationDetailsId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "EmployeeInvestigationInformation",
+            default:null
+        },
+
+        employeeBloodInvestigationDetailsId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "EmployeeBloodInformation",
+            default:null
+        },
+
+        employeeVitalAndHistoryId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "EmployeeVitalsAndHistory",
+            default:null
+        },
+
+        employeeForm32Id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "EmployeeForm32",
+            default:null
+        },
+
+        employeeForm33Id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "EmployeeForm33",
+            default:null
+        },
+    
+        employeeGenerelExaminationId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "EmployeeGeneralExamination",
+            default:null
+        },
+
+    }
 
     //other changes remaining
 });
 
 
-module.exports = mongoose.model("CheckData", checkDataSchema);
+module.exports = mongoose.model("CheckupData", checkupDataSchema);

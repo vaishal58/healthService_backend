@@ -1,6 +1,7 @@
 
 const EmployeeContactDetails = require("../models/employeeContactDetails")
 const Employee = require("../models/employeeMaster")
+const  { ObjectId } =  require('mongodb');
 
 exports.addEmpContactDetails = async (req, res) => {
     try {
@@ -30,3 +31,53 @@ exports.addEmpContactDetails = async (req, res) => {
         res.status(500).json({ error: "Internal server error" });
     }
 };
+
+
+exports.getEmpContactDetailsId = async (req, res) => {
+    try {
+        const  id = req.body;
+
+        
+
+        console.log( "--------id in backend-------" )
+
+        const _id = new ObjectId(id);
+
+        await EmployeeContactDetails.findById( _id ).then( (data) =>{
+            res.status(201).json( { data : data } )
+        } ).catch( ( error )=>{
+            console.error("Internal server error:", error);
+        res.status(500).json({ error: "Internal server error" })
+            
+        })
+    
+    } catch (error) {
+        console.error("Internal server error:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
+
+// update contact details
+
+
+// exports.getEmpContactDetailsId = async (req, res) => {
+//     try {
+//         const  id = req.body;
+
+//         const _id = new ObjectId(id);
+
+//         await EmployeeContactDetails.findById( _id ).then( (data) =>{
+//             res.status(201).json( { data : data } )
+//         } ).catch( ( error )=>{
+//             console.error("Internal server error:", error);
+//         res.status(500).json({ error: "Internal server error" })
+            
+//         })
+    
+//     } catch (error) {
+//         console.error("Internal server error:", error);
+//         res.status(500).json({ error: "Internal server error" });
+//     }
+// };
+
+

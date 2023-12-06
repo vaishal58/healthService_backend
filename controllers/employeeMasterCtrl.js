@@ -8,23 +8,44 @@ exports.addEmploy = async (req, res) => {
   try {
     const data = req.body;
 
+    const { companyId } = req.body;  //companyEmployees
+
     const newEmoloy = new Employee(data);
 
     newEmoloy
       .save()
-      .then(() => {
-        res.status(201).json({ message: "employ added successfully" });
+      .then((data) => {
+        
       })
       .catch((err) => {
         console.error("Error saving employ:", err);
         res.status(500).json({ error: "Error saving emp", details: err });
       });
+
+     const { _id } = newEmoloy; 
+
+     try{
+     
+     await Company.findByIdAndUpdate( {_id :companyId },
+      { $push: { companyEmployees: _id } },
+       );
+     }catch(error){
+        res.status(401).json({
+          message:"error when add emp to company"
+        })
+     }
+
+     res.status(200).json({
+      data:newEmoloy
+     })
+
+       
+
   } catch (error) {
     console.error("Internal server error:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
-
 
 
 
