@@ -1,11 +1,11 @@
 
 const EmployeeEyeInformation = require("../models/employeeEyeInformation")
-const Employee = require("../models/employeeMaster")
+const CheckupData = require("../models/checkupData")
 
 exports.addEmpEyeInformation = async (req, res) => {
     try {
         const data = req.body;
-        const {employeeId} = req.body
+        const {checkupDataId} = req.body
 
         const newEyeInformation= new EmployeeEyeInformation(data);
 
@@ -21,10 +21,10 @@ exports.addEmpEyeInformation = async (req, res) => {
            
         const newid = newEyeInformation._id;    
 
-        await Employee.findByIdAndUpdate( {_id :employeeId} , {
-            employeeEyeDetailsId :newid 
-                
-        } )    
+        await CheckupData.findByIdAndUpdate( {_id :checkupDataId} , 
+            
+            { $set: { 'employeeReports.employeeEyeDetailsId': newid } },
+         )    
     } catch (error) {
         console.error("Internal server error:", error);
         res.status(500).json({ error: "Internal server error" });

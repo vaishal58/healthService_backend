@@ -13,8 +13,9 @@ const employeeSchema = new mongoose.Schema({
     type: String,
     default: null
   },
-  companyName: {
-    type: String,
+  companyId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Company"
   },
   companyLocation: {
     type: String,
@@ -32,29 +33,21 @@ const employeeSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "EmployeeContactDetails"
   },
-  employeeEyeDetailsId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "EmployeeEyeInformation"
-  },
+   
+  employeeCheckUpDetails : [{
+   
+    checkUpNameId:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "EmployeeContactDetails"
+    },
 
-  employeeInvestigationDetailsId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "EmployeeInvestigationInformation"
-  },
+    checkUpDataId:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "EmployeeContactDetails"
+    }
 
-  employeeVitalAndHistoryId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "EmployeeVitalsAndHistory"
-  },
-  employeeForm32Id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "EmployeeForm32"
-  },
-  employeeForm33Id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "EmployeeForm33"
-  }
-  //other changes remaining
+  }]
+  
 });
 
 

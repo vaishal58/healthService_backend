@@ -1,6 +1,7 @@
 
-const Company = require("../models/companyMaster");
-const {ObjectId} = require("mongoose");
+const Company = require("../models/companyMaster")
+const {ObjectId} = require("mongoose")
+
 
 // add new company
 exports.addCompany = async (req, res) => {
@@ -42,9 +43,11 @@ exports.addCompanyCategory = async (req, res) => {
     try {
 
         const { _id } = req.body;
+
         const { companyJobCategorys } = req.body;
 
-        const companyData = await Company.findById(_id);
+        
+        const companyData = await Company.findById( { _id });
 
         const categoryData = companyData.companyJobCategorys;
         
