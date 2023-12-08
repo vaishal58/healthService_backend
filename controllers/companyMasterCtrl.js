@@ -209,11 +209,7 @@ exports.getAllEmployByCompany = async (req,res) => {
          message:"internal server error"
        })
     }
-   
    }
-
-
-
 
    exports.getAllEmployByCompanyAndLocation = async (req,res) => {
    
