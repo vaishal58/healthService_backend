@@ -31,3 +31,23 @@ exports.addCheckupType = async (req, res) => {
         res.status(500).json({ error: "Internal server error" });
     }
 };
+
+exports.getCheckupType = async (req, res) => {
+    try {
+
+        const data = await CheckupType.find().then((data) => {
+            res.status(201).json({ data: data });
+        }).catch((error) => {
+            console.error("Internal server error:", error);
+            res.status(500).json({ error: "Internal server error" });
+        });
+
+
+
+    } catch (error) {
+
+        console.error("Internal server error:", error);
+        res.status(500).json({ error: "Internal server error" });
+
+    }
+}
