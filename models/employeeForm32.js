@@ -35,15 +35,7 @@ const employeeForm32Schema = new mongoose.Schema({
     periodOfTemporaryUnfit:{
         type: String,
     },
-
-    hazProc: {
-        type: String,
-       
-    },
-    dangProc: {
-        type: String,
-    },
-    
+ 
     natureOfTests: {
         type: String
     },
@@ -69,31 +61,18 @@ const employeeForm32Schema = new mongoose.Schema({
         type:String
     },
 
-    dateOfExamination:{
-        type:Date
-    },
-
     signs:{
         type:String
     },
-
-    tests:{
-        type:String
-    },
-
-    fitOrUnfit:{
-        type:String
-    },
-   
-    reasonsForWithdrawal:{
-        type:String
-    },
-
+ 
     dateOfDeclaringUnfit:{
         type:Date
-    }
+    },
 
-   
+    dateOfissuingFitness : {
+        type:Date
+        
+    }   
     //other changes remaining
 });
 

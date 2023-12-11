@@ -143,7 +143,6 @@ exports.addCompanyLocation = async (req, res) => {
 
 exports.getAllCompany = async (req,res) => {
 
-
     try{
 
         const companyData = await Company.find().then( (data)=>{
@@ -156,9 +155,6 @@ exports.getAllCompany = async (req,res) => {
         console.error("Internal server error:", error);
         res.status(500).json({ error: "Internal server error" });
     }
-
-
-    
 
 }
 

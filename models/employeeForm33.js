@@ -38,7 +38,7 @@ const employeeForm33Schema = new mongoose.Schema({
         type: String
     },
     fitOrUnfit: {
-        type: Boolean,
+        type: String,
     },
     unfitReason: {
         type: String,
