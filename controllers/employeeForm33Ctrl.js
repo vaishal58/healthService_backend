@@ -8,14 +8,14 @@ exports.addEmpForm33 = async (req, res) => {
     try {
         const data = req.body;
 
-        const {checkupDataId} = req.body
+        const {checkupDataId} = data.data
 
-        const newForm33= new EmployeeForm33(data);
+        const newForm33= new EmployeeForm33(data.data);
 
         newForm33
             .save()
             .then(() => {
-                res.status(201).json({ message: "empy form33 added successfully" });
+                res.status(201).json({ data : newForm33 });
             })
             .catch((err) => {
                 console.error("Error saving eye details:", err);

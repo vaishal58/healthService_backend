@@ -6,25 +6,36 @@ exports.addCheckupName = async (req, res) => {
 
         console.log("-----")
 
-        const { checkupName } = req.body;
+        console.log( data.data )
 
-        const isPresent = await CheckupName.findOne({ checkupName });
+        const { checkupName  } = req.body;
 
-        if (isPresent) {
+        // const isPresent = await CheckupName.findOne({ checkupName });
 
-            return res.status(201).json({ message: "alredy registered" });
+        // if (isPresent) {
+        //     return res.status(201).json({ message: "alredy registered" });
+        // }
 
-        }
+       
 
-        const newCheckUpType = new CheckupName(data);
+        const newCheckUpName = new CheckupName( data.data );
 
-        newCheckUpType
+        console.log("---new form--")
+        
+        console.log( newCheckUpName );
+
+
+
+
+
+        newCheckUpName
 
             .save()
 
-            .then(() => {
+            .then((data) => {
 
-                res.status(201).json({ message: "checkup name added successfully" });
+                
+                res.status(201).json({ data : data });
 
             })
             .catch((err) => {
@@ -36,9 +47,7 @@ exports.addCheckupName = async (req, res) => {
             });
     } catch (error) {
         console.error("Internal server error:", error);
-
-        res.status(500).json({ error: "Internal server error" });
-
+         res.status(500).json({ error: "Internal server error" });
     }
 };
 
