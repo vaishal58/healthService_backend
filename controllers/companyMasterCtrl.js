@@ -2,10 +2,12 @@
 const Company = require("../models/companyMaster")
 const {ObjectId} = require("mongoose")
 
+
 // add new company
 exports.addCompany = async (req, res) => {
     try {
         const data = req.body;
+        console.log(data);
 
         const { companyName } = req.body;
 
@@ -26,7 +28,11 @@ exports.addCompany = async (req, res) => {
                 console.error("Error saving employ:", err);
                 res.status(500).json({ error: "Error saving company", details: err });
             });
-    } catch (error) {
+
+        
+
+    } catch (error) 
+    {
         console.error("Internal server error:", error);
         res.status(500).json({ error: "Internal server error" });
     }
@@ -140,7 +146,6 @@ exports.addCompanyLocation = async (req, res) => {
 }
 
 // get all company
-
 exports.getAllCompany = async (req,res) => {
 
     try{
@@ -162,6 +167,10 @@ exports.getComapnyById = async (req,res) => {
     
     const id = req.params.id
 
+    console.log( id )
+
+    
+
    
 
     const companyData = await Company.findById({_id:id}).then( (data)=>{
@@ -175,8 +184,6 @@ exports.getComapnyById = async (req,res) => {
     } )
      
 }
-
-
 
 exports.getAllEmployByCompany = async (req,res) => {
    
@@ -201,11 +208,7 @@ exports.getAllEmployByCompany = async (req,res) => {
          message:"internal server error"
        })
     }
-   
    }
-
-
-
 
    exports.getAllEmployByCompanyAndLocation = async (req,res) => {
    

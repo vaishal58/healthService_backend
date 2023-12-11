@@ -16,6 +16,7 @@ const companySchema = new mongoose.Schema({
     type: String,
   }],
 
+
   companyCheckupName:[
     {
       checkupNameId:[{
@@ -63,6 +64,7 @@ const companySchema = new mongoose.Schema({
   designation3:{
     type:String
   },
+
   companyJobCategorys: [{
     type: String,
   }],
