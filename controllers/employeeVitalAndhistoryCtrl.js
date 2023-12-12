@@ -8,22 +8,25 @@ exports.addVitalAndHistory = async (req, res) => {
     try {
         const data = req.body;
 
-        const {checkupDataId} = req.body
+        console.log( data.data );
 
-        const newVitalAndHistory= new EmployeeVitalsAndHistory(data);
+        const {checkupDataId} = data.data
 
+        const newVitalAndHistory= new EmployeeVitalsAndHistory(data.data);
+
+        
         newVitalAndHistory
             .save() 
             .then(() => {
-                res.status(201).json({ message: "empy vital and history added successfully" });
+                res.status(201).json({ data: newVitalAndHistory });
             })
             .catch((err) => {
                 console.error("Error saving vital and histor", err);
                 res.status(500).json({ error: "Error saving vital and histor", details: err });
             });
            
-        const newid = newVitalAndHistory._id;    
-
+        const newid = newVitalAndHistory._id; 
+        
         await CheckupData.findByIdAndUpdate( {_id :checkupDataId} , 
             
             { $set: { 'employeeReports.employeeVitalAndHistoryId': newid } },

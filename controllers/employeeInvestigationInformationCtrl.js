@@ -6,15 +6,17 @@ const CheckupData = require("../models/checkupData")
 exports.addEmpInvestigationDetails = async (req, res) => {
     try {
         const data = req.body;
-      
-        const {checkupDataId} = req.body
 
-        const newInvestigationInformation= new EmployeeInvestigationInformation(data);
+        console.log( data.data );
+
+        const {checkupDataId} = data.data
+
+        const newInvestigationInformation= new EmployeeInvestigationInformation(data.data);
 
         newInvestigationInformation
             .save()
             .then(() => {
-                res.status(201).json({ message: "empy investigation details added successfully" });
+                res.status(201).json({ data: newInvestigationInformation });
             })
             .catch((err) => {
                 console.error("Error saving eye details:", err);

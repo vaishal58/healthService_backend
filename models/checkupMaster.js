@@ -14,7 +14,12 @@ const checkupNameMasterSchema = new mongoose.Schema({
 
   checkupDate:{
     type: String, 
-    default:Date.now().toLocaleString()
+    // default:Date.now().toLocaleString()
+  },
+
+  checkupNumber:{
+    type: String, 
+   
   },
 
   companyId : {
@@ -26,7 +31,6 @@ const checkupNameMasterSchema = new mongoose.Schema({
     type: String
   },
 
-  // jovanu filter vise
   allCheckUps:[
     {
       employeeId:{

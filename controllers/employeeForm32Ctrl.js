@@ -7,9 +7,14 @@ exports.addEmpForm32 = async (req, res) => {
     try {
         const data = req.body;
 
-        const {checkupDataId} = req.body
+        console.log( ";;;;;;;;;;");
 
-        const newForm32 = new EmployeeForm32(data);
+        console.log( data.data );
+
+        const {checkupDataId} = data.data
+
+
+        const newForm32 = new EmployeeForm32(data.data);
 
         newForm32
             .save()

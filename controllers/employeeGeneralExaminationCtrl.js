@@ -6,14 +6,16 @@ exports.addEmpGeneralExamination = async (req, res) => {
     try {
         const data = req.body;
 
-        const {checkupDataId} = req.body
+        console.log( data.data );
 
-        const newGeneralExamination = new EmployeeGeneralExamination(data);
+        const {checkupDataId} = data.data
+
+        const newGeneralExamination = new EmployeeGeneralExamination(data.data);
 
         newGeneralExamination
             .save()
             .then(() => {
-                res.status(201).json({ message: "empy general examination details added successfully" });
+                res.status(201).json({ data: newGeneralExamination });
             })
             .catch((err) => {
                 console.error("Error saving eye details:", err);
