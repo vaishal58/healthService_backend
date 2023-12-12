@@ -199,7 +199,7 @@ exports.getAllEmployByCompany = async (req,res) => {
        res.status(201).json( {
          data:data
        } )
-     } ).catch( (errot)=>{
+     } ).catch( (error)=>{
        console.log("error :" ,error);
        res.status(501).json({
          message:"internal server error"
