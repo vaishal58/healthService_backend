@@ -15,7 +15,8 @@ exports.addEmploy = async (req, res) => {
     newEmoloy
       .save()
       .then((data) => {
-        
+          
+          return data.companyId.toString();
       })
       .catch((err) => {
         console.error("Error saving employ:", err);

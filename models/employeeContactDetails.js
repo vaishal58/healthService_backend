@@ -1,85 +1,72 @@
 const mongoose = require("mongoose");
 
 const employeeContactDetailsSchema = new mongoose.Schema({
-    
-    companyId :{
-        type: mongoose.Schema.Types.ObjectId,
-        ref:"Company"
-    },
+  companyId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Company",
+  },
 
-    employeeId :{
-        type: mongoose.Schema.Types.ObjectId,
-        ref:"Employee"
-    },
+  employeeId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Employee",
+  },
 
-    address: {
-        type: String,
-        
-    },
-    age: {
-        type: Number,
-    },
-    dateOfBirth: {
-        type: Date
-    },
-    gender: {
-        type: String,
-    },
-    height: {
-        type: Number,
-    },
-    bloodGroup:
-    {
-        type: String,
-    },
-    mentalStatus:
-    {
-        type: String,
-    },
-    dateOfJoin:
-    {
-        type: Date,
-    },
-    idMark:
-    {
-        type: String,
-    },
-    natureOfJob:
-    {
-        type: String,
-    },
+  address: {
+    type: String,
+  },
+  age: {
+    type: Number,
+  },
+  dateOfBirth: {
+    type: Date,
+  },
+  gender: {
+    type: String,
+  },
+  height: {
+    type: Number,
+  },
+  bloodGroup: {
+    type: String,
+  },
+  mentalStatus: {
+    type: String,
+  },
+  dateOfJoin: {
+    type: Date,
+  },
+  idMark: {
+    type: String,
+  },
+  natureOfJob: {
+    type: String,
+  },
 
-    // *
-    res:
-    {
-        type: String,
-    },
-    mobileNumber:
-    {
-        type: String,
-    },
-    office:
-    {
-        type: String,
-    },
-    // *
-    pp:
-    {
-        type: String,
-    },
+  // *
+  res: {
+    type: String,
+  },
+  mobileNumber: {
+    type: Number,
+  },
+  office: {
+    type: String,
+  },
 
-    emer:
-    {
-        type: String,
-    },
+  pp: {
+    type: String,
+  },
 
-    email:
-    {
-        type: String,
-    },
+  emer: {
+    type: String,
+  },
 
-    //other changes remaining
+  email: {
+    type: String,
+  },
 });
 
-
-module.exports = mongoose.model("EmployeeContactDetails", employeeContactDetailsSchema);
+module.exports = mongoose.model(
+  "EmployeeContactDetails",
+  employeeContactDetailsSchema
+);
