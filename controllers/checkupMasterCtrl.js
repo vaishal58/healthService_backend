@@ -24,26 +24,15 @@ exports.addCheckupName = async (req, res) => {
         
         console.log( newCheckUpName );
 
-
-
-
-
         newCheckUpName
-
             .save()
-
             .then((data) => {
-
-                
                 res.status(201).json({ data : data });
-
             })
             .catch((err) => {
 
                 console.error("Error saving checkup type", err);
-
                 res.status(500).json({ error: "Error saving checkup name", details: err });
-
             });
     } catch (error) {
         console.error("Internal server error:", error);
