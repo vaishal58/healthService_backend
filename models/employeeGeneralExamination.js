@@ -26,11 +26,14 @@ const employeeGeneralExaminationschema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "CheckupData"
     },
-
+    generalExam:{
+        type:String
+    },
     rs: {
         type: String,
        
     },
+
     cvs: {
         type: String,
     },
@@ -41,17 +44,17 @@ const employeeGeneralExaminationschema = new mongoose.Schema({
         type: String,
     },
     musculoSkeletal: {
-        type: Date,
+        type: String,
     },
     skinAndGenitals:
     {
-        type: Date,
+        type: String,
     },
     ent:{
         type:String
     },
     other:{
-        type:Date
+        type:String
     },
     
    

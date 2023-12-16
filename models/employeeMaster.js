@@ -26,6 +26,10 @@ const employeeSchema = new mongoose.Schema({
     type: String,
   },
 
+  ecNo: {
+    type: String,
+  },
+
   employeeContactDetailsId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "EmployeeContactDetails",
