@@ -34,10 +34,10 @@ const employeeVitalsAndHistorySchema = new mongoose.Schema({
         type: Number,
     },
     bmi: {
-        type: String
+        type: Number
     },
     pulse: {
-        type: String,
+        type: Number,
     },
     bp: {
         type: Number,
@@ -52,7 +52,7 @@ const employeeVitalsAndHistorySchema = new mongoose.Schema({
     },
     pastHistory:
     {
-        type: Date,
+        type: String,
     },
     personalHistory:
     {
