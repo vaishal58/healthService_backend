@@ -6,15 +6,15 @@ exports.addCheckupData = async (req, res) => {
 
         console.log("-----")
 
-        // const { checkupName } = req.body;
+        const { checkupName } = req.body;
 
-        // const isPresent = await CheckupData.findOne({ checkupName });
+        const isPresent = await CheckupData.findOne({ checkupName });
 
-        // if (isPresent) {
+        if (isPresent) {
 
-        //     return res.status(201).json({ message: "alredy registered" });
+            return res.status(201).json({ message: "alredy registered" });
 
-        // }
+        }
 
         const newCheckUpData = new CheckupData(data);
 
@@ -34,6 +34,7 @@ exports.addCheckupData = async (req, res) => {
                 res.status(500).json({ error: "Error saving checkup data", details: err });
 
             });
+            
     } catch (error) {
         console.error("Internal server error:", error);
 
@@ -77,6 +78,8 @@ exports.updateCheckupData = async (req, res) => {
                 res.status(500).json({ error: "Error saving checkup data", details: err });
 
             });
+
+
     } catch (error) {
         console.error("Internal server error:", error);
 

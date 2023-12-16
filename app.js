@@ -4,12 +4,15 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const connectToMongo = require("./db");
 const userRoute = require("./routes/userRoute");
+const roleRoutes = require("./routes/roleRoute");
+const employRoutes = require("./routes/employeeMasterRout");
+const companyRoute = require("./routes/companyMasterRout");
+const checkupRoute = require("./routes/checkupRoutes")
 const errorHandler = require("./middlewares/errorMiddleware");
 const cookieParser = require("cookie-parser");
 const protect = require("./middlewares/authMiddleware");
 const helmet = require("helmet");
 const morgan = require("morgan");
-const roleRoutes = require("./routes/roleRoute");
 
 
 
@@ -62,16 +65,26 @@ app.use(morgan(customFormat));
 // ----------------------------------Define a custom morgan format ----------------------------------------
 
 app.use(cors());
+app.use("/uploads", express.static("./uploads"));
+app.use("/gallery-images", express.static("./uploads/Gallery"));
+app.use("/products", express.static("./uploads/Products"));
+app.use("/cagtegory", express.static("./uploads/Category"));
+app.use("/banner", express.static("./uploads/Banner"));
+app.use("/blog-images", express.static("./uploads/Blog"));
+app.use("/color", express.static("./uploads/Color"));
+
 
 // Routes Middleware
 
 app.use("/api", userRoute);
 app.use("/api", roleRoutes);
-
 app.use("/employ", employRoutes);
 app.use("/company",companyRoute);
-app.use("/checkup",checkupRoute )
+app.use("/checkup",checkupRoute)
 
+// Error Middleware
+// app.use(errorHandler);
+// app.use(protect);
 
 // ROUTES
 app.get("/", (req, res) => {
