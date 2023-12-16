@@ -27,21 +27,36 @@ const employeeEyeInformationSchema = new mongoose.Schema({
         ref: "CheckupData"
     },
 
-    distandVisionRightEye: {
-        type: Number,
+    distandVisionWithRightEye: {
+        type: String,
+    },
+    distandVisionWithoutRightEye: {
+        type: String,
     },
 
-    distandVisionLeftEye: {
-        type: Number,
+    distandVisionWithLeftEye: {
+        type: String,
     },
 
-    nearVisionRightEye: {
-        type: Number,
+    distandVisionWithoutLeftEye: {
+        type: String,
     },
 
-    nearVisionLeftEye: {
-        type: Number,
+    nearVisionWithRightEye: {
+        type: String,
     },
+    nearVisionWithoutRightEye: {
+        type: String,
+    },
+
+    nearVisionWithLeftEye: {
+        type: String,
+    },
+    
+    nearVisionWithoutLeftEye: {
+        type: String,
+    },
+
 
     colourVision:
     {
