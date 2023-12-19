@@ -7,6 +7,7 @@ exports.addCheckupData = async (req, res) => {
 
     console.log(data);
 
+
     // const { checkupName } = req.body;
     const { employeeId, companyId, location, checkupNameId, checkupTypeId , employeeContactDetailsId } =
       req.body;
@@ -18,6 +19,7 @@ exports.addCheckupData = async (req, res) => {
     //     return res.status(201).json({ message: "alredy registered" });
 
     // }
+
 
     const newCheckUpData = new CheckupData({
       ...data,
@@ -49,8 +51,10 @@ exports.addCheckupData = async (req, res) => {
   } catch (error) {
     console.error("Internal server error:", error);
 
+
     res.status(500).json({ error: "Internal server error" });
   }
+
 };
 
 exports.updateCheckupData = async (req, res) => {
@@ -88,8 +92,10 @@ exports.updateCheckupData = async (req, res) => {
   } catch (error) {
     console.error("Internal server error:", error);
 
+
     res.status(500).json({ error: "Internal server error" });
   }
+
 };
 
 exports.getFilteredCheckupData = async (req, res) => {
