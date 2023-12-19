@@ -163,15 +163,13 @@ exports.getAllCompany = async (req,res) => {
 
 }
 
+// get company bt id 
+
 exports.getComapnyById = async (req,res) => {
     
     const id = req.params.id
 
     console.log( id )
-
-    
-
-   
 
     const companyData = await Company.findById({_id:id}).then( (data)=>{
         res.status(201).json(
@@ -184,6 +182,8 @@ exports.getComapnyById = async (req,res) => {
     } )
      
 }
+
+// get all employee by company
 
 exports.getAllEmployByCompany = async (req,res) => {
    
@@ -210,7 +210,10 @@ exports.getAllEmployByCompany = async (req,res) => {
     }
    }
 
-   exports.getAllEmployByCompanyAndLocation = async (req,res) => {
+
+// all employee by company and location
+   
+exports.getAllEmployByCompanyAndLocation = async (req,res) => {
    
     try{
         const id = req.params.id

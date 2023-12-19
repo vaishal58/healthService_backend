@@ -54,4 +54,5 @@ exports.getCheckupNames = async (req, res) => {
     console.error("Error getting unique checkup names", error);
     res.status(500).json({ error: "Internal server error" });
   }
+
 };
