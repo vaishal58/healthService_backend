@@ -5,7 +5,7 @@ const checkupTypeMasterSchema = new mongoose.Schema({
   checkupType:{
     type: String,
   },
-
+  
 });
 
 

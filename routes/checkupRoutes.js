@@ -28,4 +28,7 @@ router.get("/get-checkupdata/:id", getCheckupDataById);
 //vaishal...
 router.post("/add-checkupname-master",addCheckupName1);
 router.get("/get-checkupname-master",getCheckupName)
+
+
+
 module.exports = router;

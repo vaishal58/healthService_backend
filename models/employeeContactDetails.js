@@ -43,9 +43,9 @@ const employeeContactDetailsSchema = new mongoose.Schema({
   },
 
   // *
-  res: {
-    type: String,
-  },
+  // res: {
+  //   type: String,
+  // },
   mobileNumber: {
     type: Number,
   },

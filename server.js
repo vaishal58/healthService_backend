@@ -7,19 +7,12 @@ const userRoute = require("./routes/userRoute");
 const roleRoutes = require("./routes/roleRoute");
 const employRoutes = require("./routes/employeeMasterRout");
 const companyRoute = require("./routes/companyMasterRout");
-const checkupRoute = require("./routes/checkupRoutes")
+const checkupRoute = require("./routes/checkupRoutes");
 const errorHandler = require("./middlewares/errorMiddleware");
 const cookieParser = require("cookie-parser");
 const protect = require("./middlewares/authMiddleware");
 const helmet = require("helmet");
 const morgan = require("morgan");
-
-
-
-
-
-
-
 
 // const menuRoutes = require("./routes/menuRoutes");
 
@@ -41,6 +34,12 @@ app.use(
   })
 );
 
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "http://viara.co.in");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  next();
+});
 
 // ----------------------------------Define a custom morgan format ----------------------------------------
 morgan.token("color-status", (req, res) => {
@@ -60,7 +59,6 @@ morgan.token("color-status", (req, res) => {
 
 const customFormat = ":method :url :color-status :response-time ms";
 
-
 app.use(morgan(customFormat));
 // ----------------------------------Define a custom morgan format ----------------------------------------
 
@@ -73,14 +71,13 @@ app.use("/banner", express.static("./uploads/Banner"));
 app.use("/blog-images", express.static("./uploads/Blog"));
 app.use("/color", express.static("./uploads/Color"));
 
-
 // Routes Middleware
 
 app.use("/api", userRoute);
 app.use("/api", roleRoutes);
 app.use("/employ", employRoutes);
-app.use("/company",companyRoute);
-app.use("/checkup",checkupRoute)
+app.use("/company", companyRoute);
+app.use("/checkup", checkupRoute);
 
 // Error Middleware
 // app.use(errorHandler);

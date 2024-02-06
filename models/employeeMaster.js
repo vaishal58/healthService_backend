@@ -11,6 +11,10 @@ const employeeSchema = new mongoose.Schema({
     type: String,
     default: null,
   },
+  employeeSurname:{
+    type:String,
+    default:null,
+  },
   companyId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Company",
