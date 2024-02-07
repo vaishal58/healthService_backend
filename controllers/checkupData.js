@@ -35,7 +35,6 @@ exports.addCheckupData = async (req, res) => {
   }
 };
 
-
 exports.updateCheckupData = async (req, res) => {
   try {
     const data = req.body;
@@ -71,10 +70,8 @@ exports.updateCheckupData = async (req, res) => {
   } catch (error) {
     console.error("Internal server error:", error);
 
-
     res.status(500).json({ error: "Internal server error" });
   }
-
 };
 
 exports.getFilteredCheckupData = async (req, res) => {
@@ -96,7 +93,7 @@ exports.getFilteredCheckupData = async (req, res) => {
     if (checkupTypeId) filters.checkupTypeId = new ObjectId(checkupTypeId);
 
     if (startDate && endDate) {
-      filters.createdAt = {
+      filters.checkupDate = {
         $gte: new Date(startDate),
         $lte: new Date(endDate),
       };

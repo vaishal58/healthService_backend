@@ -2,6 +2,7 @@ const express = require("express");
 const {
   addEmploy,
   getEmployById,
+  getAllEmployee,
 } = require("../controllers/employeeMasterCtrl");
 const {
   addEmpContactDetails,
@@ -11,7 +12,9 @@ const {
   addEmpEyeInformation,
 } = require("../controllers/employeeEyeInformation");
 const {
-  addEmpInvestigationDetails, getspecificotherinvestigation, editOther,
+  addEmpInvestigationDetails,
+  getspecificotherinvestigation,
+  editOther,
 } = require("../controllers/employeeInvestigationInformationCtrl");
 const {
   addVitalAndHistory,
@@ -19,12 +22,18 @@ const {
   editVital,
 } = require("../controllers/employeeVitalAndhistoryCtrl");
 const { addEmpForm32 } = require("../controllers/employeeForm32Ctrl");
-const { addEmpForm33 } = require("../controllers/employeeForm33Ctrl");
+const {
+  addEmpForm33,
+  getspecificform33,
+  editForm33,
+} = require("../controllers/employeeForm33Ctrl");
 const {
   addEmpBloodInformation,
 } = require("../controllers/employeeBloodInvestigationInformationCtrl");
 const {
-  addEmpGeneralExamination, getspecificexamination,editExamination
+  addEmpGeneralExamination,
+  getspecificexamination,
+  editExamination,
 } = require("../controllers/employeeGeneralExaminationCtrl");
 const router = express.Router();
 
@@ -41,10 +50,16 @@ router.post("/set-employ-general-examination", addEmpGeneralExamination);
 router.post("/get-employ-contactetails-by-id", getEmpContactDetailsId);
 router.get("/get-specificvital/:id", getspecificvitalsandhistory);
 router.post("/edit-vital/:id", editVital);
-router.post("/edit-examination/:id",editExamination)
-router.post("/edit-other/:id",editOther)
+router.post("/edit-examination/:id", editExamination);
+router.post("/edit-other/:id", editOther);
+router.post("/edit-form33/:id",editForm33)
 router.get("/get-specificgeneral/:id", getspecificexamination);
-router.get("/get-specificotherinvsetigation/:id", getspecificotherinvestigation);
+router.get(
+  "/get-specificotherinvsetigation/:id",
+  getspecificotherinvestigation
+);
+router.get("/get-all-employee", getAllEmployee);
+router.get("/get-specificform33/:id", getspecificform33);
 // investigation
 
 module.exports = router;

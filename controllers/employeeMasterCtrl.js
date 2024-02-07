@@ -75,3 +75,16 @@ exports.getEmployById = async (req, res) => {
   }
 
 }
+
+
+exports.getAllEmployee = async (req, res) => {
+  try {
+    const departmentType = await Employee.find()
+      
+      .exec();
+
+    return res.json({ data: departmentType });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
